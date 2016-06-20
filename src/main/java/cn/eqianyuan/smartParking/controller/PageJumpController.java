@@ -1,7 +1,7 @@
 package cn.eqianyuan.smartParking.controller;
 
-import cn.eqianyuan.erp.common.constant.SystemConstant;
-import cn.eqianyuan.erp.common.util.SessionUtil;
+import cn.eqianyuan.smartParking.common.util.SessionUtil;
+import cn.eqianyuan.smartParking.common.util.yamlMapper.SystemConf;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Created by jason on 2016-05-17.
  */
 @Controller
+@RequestMapping("/system-manage")
 public class PageJumpController extends BaseController {
 
     /**
@@ -21,12 +22,12 @@ public class PageJumpController extends BaseController {
      *
      * @return
      */
-    @RequestMapping("/system-manage/index")
+    @RequestMapping("/index")
     public String index() {
-        if (ObjectUtils.isEmpty(SessionUtil.getAttribute(SystemConstant.SYSTEM_SESSION_USER))) {
-            return SystemConstant.SYSTEM_MANAGE_LOGIN_BY_PAGE;
+        if (ObjectUtils.isEmpty(SessionUtil.getAttribute(SystemConf.SYSTEM_SESSION_USER.toString()))) {
+            return SystemConf.SYSTEM_MANAGE_LOGIN_BY_PAGE.toString();
         }
-        return SystemConstant.MANAGE_FISCAL_DETAIL_LIST_BY_PAGE;
+        return SystemConf.MANAGE_DETECTOR_LIST_BY_PAGE.toString();
     }
 
 }

@@ -1,13 +1,13 @@
 package cn.eqianyuan.smartParking.service.impl;
 
-import cn.eqianyuan.erp.common.constant.ExceptionMsgConstant;
-import cn.eqianyuan.erp.common.constant.SystemConstant;
-import cn.eqianyuan.erp.common.exception.EqianyuanException;
-import cn.eqianyuan.erp.common.util.Md5Util;
-import cn.eqianyuan.erp.common.util.SessionUtil;
-import cn.eqianyuan.erp.common.util.yaml.YamlForSystemUser;
-import cn.eqianyuan.erp.entity.SystemUserBo;
-import cn.eqianyuan.erp.service.IAuthorizationService;
+import cn.eqianyuan.smartParking.common.constant.ExceptionMsgConstant;
+import cn.eqianyuan.smartParking.common.exception.EqianyuanException;
+import cn.eqianyuan.smartParking.common.util.Md5Util;
+import cn.eqianyuan.smartParking.common.util.SessionUtil;
+import cn.eqianyuan.smartParking.common.util.yamlMapper.SystemConf;
+import cn.eqianyuan.smartParking.common.util.yamlMapper.SystemUser4Yaml;
+import cn.eqianyuan.smartParking.entity.SystemUser;
+import cn.eqianyuan.smartParking.service.IAuthorizationService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
      * @return 系统用户BO对象
      * @throws EqianyuanException
      */
-    public SystemUserBo login(String userName, String password) throws EqianyuanException {
+    public SystemUser login(String userName, String password) throws EqianyuanException {
         if (StringUtils.isEmpty(userName)) {
             logger.warn("login fail, because request param [ userName ] is empty.");
             throw new EqianyuanException(ExceptionMsgConstant.LOGIN_USER_NAME_IS_EMPTY);
@@ -58,7 +58,7 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
          * todo 后期根据业务需要，考虑将用户移植到数据库中
          */
 
-        if (CollectionUtils.isEmpty(YamlForSystemUser.getSystemUserList())) {
+        if (CollectionUtils.isEmpty(SystemUser4Yaml.getSystemUserList())) {
             logger.error("userName [" + userName + "] login fail, because system user configuration file content is empty.");
             throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_ERROR);
         }
@@ -66,7 +66,7 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
         //密码加密处理
         String encryptionPwd = Md5Util.MD5By32(StringUtils.lowerCase(password));
 
-        for (SystemUserBo systemUserBo : YamlForSystemUser.getSystemUserList()) {
+        for (SystemUser systemUserBo : SystemUser4Yaml.getSystemUserList()) {
             if (!StringUtils.equalsIgnoreCase(userName, systemUserBo.getUserName())) {
                 continue;
             }
@@ -100,13 +100,13 @@ public class AuthorizationServiceImpl implements IAuthorizationService {
      * @return
      * @throws EqianyuanException
      */
-    public SystemUserBo login(String userName, String password, String code) throws EqianyuanException {
+    public SystemUser login(String userName, String password, String code) throws EqianyuanException {
         if (StringUtils.isEmpty(code)) {
             logger.warn("login fail, because request param [ code ] is empty.");
             throw new EqianyuanException(ExceptionMsgConstant.LOGIN_VALIDATA_CODE_IS_EMPTY);
         }
 
-        String codeByValidation = (String) SessionUtil.getAttribute(SystemConstant.VERIFY_CODE);
+        String codeByValidation = (String) SessionUtil.getAttribute(SystemConf.VERIFY_CODE.toString());
         if (StringUtils.isEmpty(codeByValidation)) {
             logger.warn("login fail, because there is no verification code in the session attribute.");
             throw new EqianyuanException(ExceptionMsgConstant.LOGIN_VALIDATA_CODE_IS_ERROR);

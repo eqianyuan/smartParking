@@ -1,12 +1,15 @@
 package cn.eqianyuan.smartParking.controller;
 
-import cn.eqianyuan.erp.common.constant.SystemConstant;
-import cn.eqianyuan.erp.common.exception.EqianyuanException;
-import cn.eqianyuan.erp.common.response.ServerResponse;
-import cn.eqianyuan.erp.common.util.SessionUtil;
-import cn.eqianyuan.erp.common.util.VerifyCodeUtils;
-import cn.eqianyuan.erp.entity.SystemUserVo;
-import cn.eqianyuan.erp.service.AuthorizationService;
+import cn.eqianyuan.smartParking.common.constant.ExceptionMsgConstant;
+import cn.eqianyuan.smartParking.common.exception.EqianyuanException;
+import cn.eqianyuan.smartParking.common.response.ServerResponse;
+import cn.eqianyuan.smartParking.common.response.vo.SystemUserVo;
+import cn.eqianyuan.smartParking.common.util.SessionUtil;
+import cn.eqianyuan.smartParking.common.util.VerifyCodeUtils;
+import cn.eqianyuan.smartParking.common.util.yamlMapper.SystemConf;
+import cn.eqianyuan.smartParking.entity.SystemUser;
+import cn.eqianyuan.smartParking.service.IAuthorizationService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +33,7 @@ import java.io.IOException;
 public class AuthorizationController extends BaseController {
 
     @Autowired
-    private AuthorizationService authorizationService;
+    private IAuthorizationService authorizationService;
 
     /**
      * 获取验证码
@@ -42,12 +45,19 @@ public class AuthorizationController extends BaseController {
     @RequestMapping("/verifyCode")
     public void verifyCode(@RequestParam(name = "verify_code_length", required = false, defaultValue = "4") Integer verifyCodeLength,
                            HttpServletResponse response) throws EqianyuanException, IOException {
+        /**
+         * 控制验证码生成数量，避免构建图片时出现内存不足问题
+         */
+        if (verifyCodeLength > 10) {
+            throw new EqianyuanException(ExceptionMsgConstant.VALIDATA_CODE_CONTENT_LENGTH_TO0_LONG);
+        }
+
         String verifyCode = VerifyCodeUtils.random(verifyCodeLength);
 
         /**
          * 将验证码内容写入session
          */
-        SessionUtil.setAttribute(SystemConstant.VERIFY_CODE, verifyCode);
+        SessionUtil.setAttribute(SystemConf.VERIFY_CODE.toString(), verifyCode);
 
         // 禁止图像缓存。
         response.setHeader("Pragma", "no-cache");
@@ -57,7 +67,7 @@ public class AuthorizationController extends BaseController {
 
         // 将图像输出到Servlet输出流中。
         ServletOutputStream sos = response.getOutputStream();
-        VerifyCodeUtils.render(verifyCode, sos, 120, 30);
+        VerifyCodeUtils.render(verifyCode, sos, verifyCodeLength * 30, 30);
         sos.close();
     }
 
@@ -75,12 +85,14 @@ public class AuthorizationController extends BaseController {
     public ServerResponse login(@RequestParam(value = "user_name") String userName,
                                 @RequestParam String password,
                                 @RequestParam(value = "verify_code") String verifyCode) throws EqianyuanException {
-        SystemUserVo systemUserVo = authorizationService.login(userName, password, verifyCode);
+        SystemUser systemUser = authorizationService.login(userName, password, verifyCode);
+        SystemUserVo systemUserVo = new SystemUserVo();
+        BeanUtils.copyProperties(systemUserVo, systemUser);
 
         /**
          * 将用户VO对象写入session
          */
-        SessionUtil.setAttribute(SystemConstant.SYSTEM_SESSION_USER, systemUserVo);
+        SessionUtil.setAttribute(SystemConf.SYSTEM_SESSION_USER.toString(), systemUserVo);
         return new ServerResponse();
     }
 
@@ -95,8 +107,8 @@ public class AuthorizationController extends BaseController {
         /**
          * 将用户VO对象从session中移除
          */
-        SessionUtil.removeAttribute(SystemConstant.SYSTEM_SESSION_USER);
-        return SystemConstant.SYSTEM_MANAGE_LOGIN_BY_PAGE;
+        SessionUtil.removeAttribute(SystemConf.SYSTEM_SESSION_USER.toString());
+        return SystemConf.SYSTEM_MANAGE_LOGIN_BY_PAGE.toString();
     }
 
 }

@@ -1,5 +1,9 @@
 package cn.eqianyuan.smartParking.common.util;
 
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,5 +36,40 @@ public class YamlForMapHandleUtil {
         } catch (NumberFormatException e) {
             return key;
         }
+    }
+
+    /**
+     * 根据KEY获取VALUE
+     *
+     * @param map
+     * @param msgKey
+     * @return
+     */
+    public static Object getMapByKey(Map<String, Object> map, String msgKey) {
+        if (CollectionUtils.isEmpty(map)) {
+            return null;
+        }
+
+        if (StringUtils.isEmpty(msgKey)) {
+            return null;
+        }
+
+        return map.get(converKey(msgKey));
+    }
+
+    /**
+     * 根据key获取消息内容
+     *
+     * @param messageCode 消息错误码
+     * @param key         消息KEY
+     * @return
+     */
+    public static String getValueBykey(Map map, String messageCode, String key) {
+        Object obj = getMapByKey(map, converKey(messageCode));
+        if (ObjectUtils.isEmpty(obj)) {
+            return null;
+        }
+
+        return getMapByKey((Map<String, Object>) obj, key).toString();
     }
 }

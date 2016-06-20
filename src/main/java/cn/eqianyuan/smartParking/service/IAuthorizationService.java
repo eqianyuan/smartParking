@@ -1,7 +1,7 @@
 package cn.eqianyuan.smartParking.service;
 
-import cn.eqianyuan.erp.common.exception.EqianyuanException;
-import cn.eqianyuan.erp.entity.SystemUserBo;
+import cn.eqianyuan.smartParking.common.exception.EqianyuanException;
+import cn.eqianyuan.smartParking.entity.SystemUser;
 
 /**
  * 系统用户授权登录操作接口类
@@ -20,7 +20,7 @@ public interface IAuthorizationService {
      * @return 系统用户BO对象
      * @throws EqianyuanException
      */
-    SystemUserBo login(String userName, String password) throws EqianyuanException;
+    SystemUser login(String userName, String password) throws EqianyuanException;
 
     /**
      * 带验证码的登录
@@ -31,5 +31,5 @@ public interface IAuthorizationService {
      * @return 系统用户BO对象
      * @throws EqianyuanException
      */
-    SystemUserBo login(String userName, String password, String code) throws EqianyuanException;
+    SystemUser login(String userName, String password, String code) throws EqianyuanException;
 }

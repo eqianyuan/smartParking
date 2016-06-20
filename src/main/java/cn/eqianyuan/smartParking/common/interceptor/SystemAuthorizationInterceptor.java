@@ -1,8 +1,8 @@
 package cn.eqianyuan.smartParking.common.interceptor;
 
-import cn.eqianyuan.erp.common.constant.SystemConstant;
-import cn.eqianyuan.erp.common.util.SessionUtil;
-import cn.eqianyuan.erp.entity.SystemUserVo;
+import cn.eqianyuan.smartParking.common.response.vo.SystemUserVo;
+import cn.eqianyuan.smartParking.common.util.SessionUtil;
+import cn.eqianyuan.smartParking.common.util.yamlMapper.SystemConf;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,9 +30,9 @@ public class SystemAuthorizationInterceptor implements HandlerInterceptor {
          * 从会话中获取系统用户信息
          * 如果用户信息为空，则返回登录页面，否则继续向下执行
          */
-        SystemUserVo systemUserVo = (SystemUserVo) SessionUtil.getAttribute(SystemConstant.SYSTEM_SESSION_USER);
+        SystemUserVo systemUserVo = (SystemUserVo) SessionUtil.getAttribute(SystemConf.SYSTEM_SESSION_USER.toString());
         if (ObjectUtils.isEmpty(systemUserVo)) {
-            httpServletResponse.sendRedirect("http://"+httpServletRequest.getServerName());
+            httpServletResponse.sendRedirect("http://" + httpServletRequest.getServerName());
             return false;
         }
         return true;

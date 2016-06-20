@@ -12,7 +12,19 @@
         </property>
     </bean>
 
-    <bean class="cn.eqianyuan.erp.common.util.yaml.YamlForSystemErrMsg">
-        <property name="systemErrMsg" ref="systemErrMsg"/>
+    <bean class="cn.eqianyuan.smartParking.common.util.yamlMapper.SystemErr">
+        <property name="map" ref="systemErrMsg"/>
+    </bean>
+
+    <bean id="dataMap" class="org.springframework.beans.factory.config.YamlMapFactoryBean">
+        <property name="resources">
+            <list>
+                <value>classpath*:data-map.yaml</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="cn.eqianyuan.smartParking.common.util.yamlMapper.DataMap">
+        <property name="map" ref="dataMap"/>
     </bean>
 </beans>

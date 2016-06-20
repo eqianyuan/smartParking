@@ -66,11 +66,17 @@
       <version>5.1.15</version>
     </dependency>
 
-    <!-- http://mvnrepository.com/artifact/org.yaml/snakeyaml -->
     <dependency>
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
       <version>1.16</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
   <build>

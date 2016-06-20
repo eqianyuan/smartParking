@@ -35,6 +35,11 @@
   code: 400
   cn: 用户名或密码错误
   en: the user name or password is err
+
+10010006:
+  code: 500
+  cn: 验证码内容长度过长
+  en: the validate code content length too long
 ##### 登录错误描述 结束 #####
 
 ##### 财政收支错误描述 开始 #####

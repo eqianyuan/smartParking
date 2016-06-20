@@ -21,6 +21,8 @@ public class ExceptionMsgConstant {
     public static final String LOGIN_PASSWORD_IS_EMPTY = "10010004";
     //用户名或密码错误
     public static final String LOGIN_USER_NAME_OR_PASSWORD_ERROR = "10010005";
+    //验证码内容超长
+    public static final String VALIDATA_CODE_CONTENT_LENGTH_TO0_LONG = "10010006";
     //公司财政收支明细用户名为空
     public static final String FISCAL_DETAIL_USER_NAME_IS_EMPTY = "10020001";
     //公司财政收支明细收支类型为空

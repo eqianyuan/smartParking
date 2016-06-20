@@ -22,10 +22,6 @@ public class ServerResponse {
         this(DEFAULT_CODE, DEFAULT_MSG, data);
     }
 
-    public ServerResponse(String code, String message) {
-        this(code, message, null);
-    }
-
     public ServerResponse(String code, String message, Object data) {
         this.code = code;
         if (StringUtils.isNotEmpty(message)) {
