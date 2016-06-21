@@ -154,7 +154,7 @@
                                         + '<td><input type="checkbox" class="itemCheck" value="' + this.id + '"/></td>'
                                         + '<td>' + this.id + '</td>'
                                         + '<td>' + this.code + '</td>'
-                                        + '<td>' + this.status + '</td>'
+                                        + '<td>' + this.status_cn + '</td>'
                                         + '<td>' + (null == this.parent_id ? "" : this.parent_id) + '</td>'
                                         + '</tr>';
                             });
