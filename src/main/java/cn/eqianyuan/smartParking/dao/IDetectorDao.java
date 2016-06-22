@@ -32,4 +32,12 @@ public interface IDetectorDao {
      * @return
      */
     List<Detector> selectByPagination(@Param("page") Page page);
+
+    /**
+     * 根据序列编号删除数据
+     *
+     * @param id
+     * @return
+     */
+    int deleteById(@Param("id") String... id);
 }

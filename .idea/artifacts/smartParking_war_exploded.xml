@@ -28,6 +28,7 @@
           <element id="library" level="project" name="Maven: commons-lang:commons-lang:2.6" />
           <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.15" />
           <element id="library" level="project" name="Maven: org.yaml:snakeyaml:1.16" />
+          <element id="library" level="project" name="Maven: jstl:jstl:1.2" />
         </element>
       </element>
       <element id="directory" name="META-INF">

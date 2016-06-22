@@ -70,6 +70,7 @@ public class YamlForMapHandleUtil {
             return null;
         }
 
-        return getMapByKey((Map<String, Object>) obj, key).toString();
+        Object mapByKey = getMapByKey((Map<String, Object>) obj, key);
+        return ObjectUtils.isEmpty(mapByKey) ? null : mapByKey.toString();
     }
 }

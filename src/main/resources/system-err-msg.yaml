@@ -42,39 +42,10 @@
   en: the validate code content length too long
 ##### 登录错误描述 结束 #####
 
-##### 财政收支错误描述 开始 #####
+##### 探测器错误描述 开始 #####
 10020001:
   code: 400
-  cn: 用户名不能为空
-  en: the user name can't empty
+  cn: 序列编号不能为空
+  en: the id can't empty
 
-10020002:
-  code: 400
-  cn: 类型不能为空
-  en: the type can't empty
-
-10020003:
-  code: 400
-  cn: 描述内容不能为空
-  en: the description can't empty
-
-10020004:
-  code: 400
-  cn: 费用不能为空
-  en: the cost can't empty
-
-10020005:
-  code: 413
-  cn: 用户名内容太长
-  en: the uer name content to long
-
-10020006:
-  code: 415
-  cn: 不支持的类型
-  en: no support type
-
-10020007:
-  code: 404
-  cn: 数据不存在
-  en: data no exists
-##### 财政收支错误描述 错误 #####
+##### 探测器错误描述 错误 #####

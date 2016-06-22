@@ -47,4 +47,17 @@ public class DetectorController extends BaseController {
         PageResponse pageResponse = detectorService.getList(pageNo, pageSize);
         return new ServerResponse.ResponseBuilder().data(pageResponse).build();
     }
+
+    /**
+     * 探测器设备信息删除
+     *
+     * @param id 设备序列号
+     * @return
+     */
+    @RequestMapping("/delete")
+    @ResponseBody
+    public ServerResponse delete(@RequestParam(value = "id") String[] id) throws EqianyuanException {
+        detectorService.delete(id);
+        return new ServerResponse();
+    }
 }

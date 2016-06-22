@@ -23,18 +23,7 @@ public class ExceptionMsgConstant {
     public static final String LOGIN_USER_NAME_OR_PASSWORD_ERROR = "10010005";
     //验证码内容超长
     public static final String VALIDATA_CODE_CONTENT_LENGTH_TO0_LONG = "10010006";
-    //公司财政收支明细用户名为空
-    public static final String FISCAL_DETAIL_USER_NAME_IS_EMPTY = "10020001";
-    //公司财政收支明细收支类型为空
-    public static final String FISCAL_DETAIL_TYPE_IS_EMPTY = "10020002";
-    //公司财政收支明细内容为空
-    public static final String FISCAL_DETAIL_DESCRIPTION_IS_EMPTY = "10020003";
-    //公司财政收支明细费用为空
-    public static final String FISCAL_DETAIL_COST_IS_EMPTY = "10020004";
-    //公司财政收支明细用户名内容太长
-    public static final String FISCAL_DETAIL_USER_NAME_CONTENT_TO_LONG = "10020005";
-    //公司财政收支明细状态不是正确值
-    public static final String FISCAL_DETAIL_STATUS_IS_NOT_CORRECT = "10020006";
-    //公司财政收支明细by编号不存在
-    public static final String FISCAL_DETAIL_BY_ID_IS_EMPTY = "10020007";
+
+    //探测器设备序列号为空
+    public static final String DETECTOR_ID_IS_EMPTY = "10020001";
 }

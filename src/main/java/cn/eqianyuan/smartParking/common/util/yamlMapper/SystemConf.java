@@ -32,6 +32,7 @@ public enum SystemConf {
      * 系统登录页面位置
      */
     SYSTEM_MANAGE_LOGIN_BY_PAGE("login"),
+    SYSTEM_MANAGE_HOME_BY_PAGE("home"),
     //探测器管理列表页面
     MANAGE_DETECTOR_LIST_BY_PAGE("detector" + File.separator + "list");
 
