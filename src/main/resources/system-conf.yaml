@@ -1,0 +1,5 @@
+#
+# upper machine binding terminals count
+# 上位机允许绑定下位机的数量
+#
+UMBTC: 30

@@ -22,7 +22,7 @@ public class DataMap {
      * 利用枚举定义yaml配置文件中的key
      */
     public enum Key {
-        TYPE("type"), STATUS("status"), DETECTOR("detector");
+        TYPE("type"), STATUS("status"), DETECTOR("detector"), MASTER_COMPUTER("master computer");
 
         private String key;
 

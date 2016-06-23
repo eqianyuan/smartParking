@@ -8,6 +8,11 @@
   code: 400
   cn: 缺少必要请求参数
   en: the lack of request parameter
+
+10000003:
+  code: 500
+  cn: 获取字节内容异常
+  en: get bytes fail
 ##### 系统级别错误描述 结束 #####
 
 ##### 登录错误描述 开始 #####
@@ -47,5 +52,26 @@
   code: 400
   cn: 序列编号不能为空
   en: the id can't empty
-
 ##### 探测器错误描述 错误 #####
+
+##### 上位机错误描述 开始 #####
+10030001:
+  code: 400
+  cn: 序列编号不能为空
+  en: the id can't empty
+
+10030002:
+  code: 400
+  cn: 设备名称不能为空
+  en: the name can't empty
+
+10030003:
+  code: 400
+  cn: 设备编号不能为空
+  en: the code can't empty
+
+10030004:
+  code: 500
+  cn: 设备名称内容太长
+  en: the name content too long
+##### 上位机错误描述 错误 #####

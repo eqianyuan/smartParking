@@ -10,3 +10,6 @@
 - !!cn.eqianyuan.smartParking.entity.SystemUser
   userName: 1
   password: C4CA4238A0B923820DCC509A6F75849B
+- !!cn.eqianyuan.smartParking.entity.SystemUser
+  userName: xuxianwen
+  password: 08317086CA592B18770403733810B141

@@ -87,7 +87,7 @@ public class AuthorizationController extends BaseController {
                                 @RequestParam(value = "verify_code") String verifyCode) throws EqianyuanException {
         SystemUser systemUser = authorizationService.login(userName, password, verifyCode);
         SystemUserVo systemUserVo = new SystemUserVo();
-        BeanUtils.copyProperties(systemUserVo, systemUser);
+        BeanUtils.copyProperties(systemUser, systemUserVo);
 
         /**
          * 将用户VO对象写入session

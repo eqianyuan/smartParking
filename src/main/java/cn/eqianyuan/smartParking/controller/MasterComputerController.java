@@ -1,10 +1,11 @@
 package cn.eqianyuan.smartParking.controller;
 
 import cn.eqianyuan.smartParking.common.exception.EqianyuanException;
+import cn.eqianyuan.smartParking.common.request.masterComputer.MasterComputerRequest;
 import cn.eqianyuan.smartParking.common.response.PageResponse;
 import cn.eqianyuan.smartParking.common.response.ServerResponse;
 import cn.eqianyuan.smartParking.common.util.yamlMapper.SystemConf;
-import cn.eqianyuan.smartParking.service.IDetectorService;
+import cn.eqianyuan.smartParking.service.IMasterComputerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,28 +13,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * 探测器设备管理控制器
+ * 上位机设备管理控制器
  * Created by jason on 2016-06-20.
  */
 @Controller
-@RequestMapping("/system-manage/detector")
-public class DetectorController extends BaseController {
+@RequestMapping("/system-manage/masterComputer")
+public class MasterComputerController extends BaseController {
 
     @Autowired
-    private IDetectorService detectorService;
+    private IMasterComputerService masterComputerService;
 
     /**
-     * 探测器列表页面
+     * 上位机列表页面
      *
      * @return
      */
     @RequestMapping("/list")
-    public String detectorList() {
-        return SystemConf.MANAGE_DETECTOR_LIST_BY_PAGE.toString();
+    public String listByPage() {
+        return SystemConf.MANAGE_MASTER_COMPUTER_LIST_BY_PAGE.toString();
     }
 
     /**
-     * 探测器设备信息列表
+     * 上位机设备信息列表
      *
      * @return
      * @throws EqianyuanException
@@ -44,12 +45,12 @@ public class DetectorController extends BaseController {
                                    @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize)
             throws EqianyuanException {
 
-        PageResponse pageResponse = detectorService.getList(pageNo, pageSize);
+        PageResponse pageResponse = masterComputerService.getList(pageNo, pageSize);
         return new ServerResponse.ResponseBuilder().data(pageResponse).build();
     }
 
     /**
-     * 探测器设备信息删除
+     * 上位机设备信息删除
      *
      * @param id 设备序列号
      * @return
@@ -57,11 +58,22 @@ public class DetectorController extends BaseController {
     @RequestMapping("/delete")
     @ResponseBody
     public ServerResponse delete(@RequestParam(value = "id") String[] id) throws EqianyuanException {
-        detectorService.delete(id);
+        masterComputerService.delete(id);
         return new ServerResponse();
     }
 
-    public ServerResponse add(){
-        return null;
+    @RequestMapping("/add")
+    @ResponseBody
+    public ServerResponse add(@RequestParam(value = "name") String name,
+                              @RequestParam(value = "code") Integer code) throws EqianyuanException {
+        masterComputerService.add(name, code);
+        return new ServerResponse();
+    }
+
+    @RequestMapping("/update")
+    @ResponseBody
+    public ServerResponse update(MasterComputerRequest masterComputerRequest) throws EqianyuanException {
+        masterComputerService.update(masterComputerRequest);
+        return new ServerResponse();
     }
 }

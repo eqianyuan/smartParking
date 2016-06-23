@@ -26,7 +26,7 @@ public class PageJumpController extends BaseController {
      *
      * @return
      */
-    @RequestMapping("/index")
+    @RequestMapping("/home")
     public String index() {
         if (ObjectUtils.isEmpty(SessionUtil.getAttribute(SystemConf.SYSTEM_SESSION_USER.toString()))) {
             return SystemConf.SYSTEM_MANAGE_LOGIN_BY_PAGE.toString();
@@ -34,6 +34,12 @@ public class PageJumpController extends BaseController {
         return SystemConf.SYSTEM_MANAGE_HOME_BY_PAGE.toString();
     }
 
+    /**
+     * 公共页面跳转
+     * @param url   目的页面位置
+     * @return
+     * @throws Exception
+     */
     @RequestMapping("/gotoPage")
     public String gotoPage(@RequestParam(name = "url") String url) throws Exception {
         if(StringUtils.isEmpty(url)){

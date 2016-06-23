@@ -2,18 +2,18 @@ package cn.eqianyuan.smartParking.common.response.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-/**
- * 面向视图层探测器对象
- */
-public class DetectorVo {
+public class MasterComputerVo {
+    //序列编号
     private String id;
 
+    //设备代码
     private Integer code;
 
-    private Integer status;
+    //设备名称
+    private String name;
 
-    @JSONField(name = "parent_id")
-    private String parentId;
+    //设备状态
+    private Integer status;
 
     @JSONField(name = "status_cn")
     private String statusCN;
@@ -34,20 +34,20 @@ public class DetectorVo {
         this.code = code;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
     public Integer getStatus() {
         return status;
     }
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public String getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
     }
 
     public String getStatusCN() {

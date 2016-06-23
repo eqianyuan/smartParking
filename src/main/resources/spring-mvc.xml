@@ -35,7 +35,7 @@
             <mvc:mapping path="/system-manage/**"/>
             <!-- 排除login*的过滤 -->
             <mvc:exclude-mapping path="/system-manage/log*"/>
-            <mvc:exclude-mapping path="/system-manage/index"/>
+            <mvc:exclude-mapping path="/system-manage/home"/>
             <bean class="cn.eqianyuan.smartParking.common.interceptor.SystemAuthorizationInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

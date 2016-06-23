@@ -23,7 +23,7 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">探测器管理列表</h1>
+                <h1 class="page-header">上位机管理列表</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -32,10 +32,8 @@
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <a href="/system-manage/gotoAddByFiscalDetail">
-                            <button type="button" class="btn btn-default btn-lg">注册探测器</button>
-                        </a>
-                        <button type="button" class="btn btn-danger btn-lg delete">注销探测器</button>
+                        <button type="button" class="btn btn-default btn-lg add">注册上位机</button>
+                        <button type="button" class="btn btn-danger btn-lg delete">注销上位机</button>
                     </div>
                     <div class="alert alert-warning alert-dismissable hidden operatorTip">
                         <button type="button" class="close" data-dismiss="operatorTip"
@@ -62,8 +60,8 @@
                                     <th><input type="checkbox" class="checkAll"/></th>
                                     <th>序列编号</th>
                                     <th>设备代码</th>
+                                    <th>设备名称</th>
                                     <th>状态</th>
-                                    <th>归属上位机编号</th>
                                 </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -86,7 +84,7 @@
                             aria-hidden="true">×
                     </button>
                     <h4 class="modal-title" id="myModalLabel">
-                        探测器管理操作确认
+                        上位机管理操作确认
                     </h4>
                 </div>
                 <div class="modal-body">
@@ -132,7 +130,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/system-manage/detector/dataList",
+                    url: "/system-manage/masterComputer/dataList",
                     data: $.extend({}, pagination.data, pagination.page),
                     success: function (response) {
                         //设置分页
@@ -146,8 +144,8 @@
                                         + '<td><input type="checkbox" class="itemCheck" value="' + this.id + '"/></td>'
                                         + '<td>' + this.id + '</td>'
                                         + '<td>' + this.code + '</td>'
+                                        + '<td>' + this.name + '</td>'
                                         + '<td>' + this.status_cn + '</td>'
-                                        + '<td>' + (null == this.parent_id ? "" : this.parent_id) + '</td>'
                                         + '</tr>';
                             });
 
@@ -164,7 +162,6 @@
         pagination.list();
 
         $("#search").click(function () {
-//            pagination.data.user_name = $("#search_by_userName").val();
             pagination.page.pageNo = 1;
             pagination.list();
         });
@@ -197,7 +194,7 @@
         $(".confirm").click(function(){
             $.ajax({
                 type: "post",
-                url: "/system-manage/detector/delete",
+                url: "/system-manage/masterComputer/delete",
                 traditional: true,
                 data: {"id":ids},
                 success: function(response){
@@ -215,6 +212,11 @@
                     }
                 }
             });
+        });
+
+        //注册上位机
+        $(".add").click(function(){
+            window.location.href = "/system-manage/gotoPage?url=master computer/add";
         });
     });
 

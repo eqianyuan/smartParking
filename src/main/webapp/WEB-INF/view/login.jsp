@@ -83,7 +83,7 @@
                 success: function(resp){
                     if(resp.code == "200"){
                         //跳转到主页
-                        window.location.href = "${pageContext.request.contextPath}/system-manage/detector/list";
+                        window.location.href = "/system-manage/home";
                         return ;
                     }
                     //重新载入验证码
