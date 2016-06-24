@@ -5,7 +5,7 @@
   en: the system error
 
 10000002:
-  code: 400
+  code: 404
   cn: 缺少必要请求参数
   en: the lack of request parameter
 
@@ -17,27 +17,27 @@
 
 ##### 登录错误描述 开始 #####
 10010001:
-  code: 400
+  code: 404
   cn: 验证码不能为空
   en: the validate code can't empty
 
 10010002:
-  code: 400
+  code: 404
   cn: 验证码错误
   en: the validate code is err
 
 10010003:
-  code: 400
+  code: 404
   cn: 用户名不能为空
   en: the user name can't empty
 
 10010004:
-  code: 200
-  cn: 密码错误
+  code: 404
+  cn: 密码不能为空
   en: the password can't empty
 
 10010005:
-  code: 400
+  code: 500
   cn: 用户名或密码错误
   en: the user name or password is err
 
@@ -49,24 +49,24 @@
 
 ##### 探测器错误描述 开始 #####
 10020001:
-  code: 400
+  code: 404
   cn: 序列编号不能为空
   en: the id can't empty
 ##### 探测器错误描述 错误 #####
 
 ##### 上位机错误描述 开始 #####
 10030001:
-  code: 400
+  code: 404
   cn: 序列编号不能为空
   en: the id can't empty
 
 10030002:
-  code: 400
+  code: 404
   cn: 设备名称不能为空
   en: the name can't empty
 
 10030003:
-  code: 400
+  code: 404
   cn: 设备编号不能为空
   en: the code can't empty
 
@@ -74,4 +74,9 @@
   code: 500
   cn: 设备名称内容太长
   en: the name content too long
+
+10030005:
+  code: 500
+  cn: 设备信息数据不存在
+  en: the data no exists
 ##### 上位机错误描述 错误 #####

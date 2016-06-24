@@ -36,4 +36,6 @@ public class ExceptionMsgConstant {
     public static final String MASTER_COMPUTER_CODE_IS_EMPTY = "10030003";
     //上位机设备名称内容太长
     public static final String MASTER_COMPUTER_NAME_CONTENT_TOO_LONG = "10030004";
+    //上位机设备信息数据不存在
+    public static final String MASTER_COMPUTER_INFO_NO_EXISTS = "10030005";
 }

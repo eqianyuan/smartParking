@@ -23,16 +23,6 @@ public class DetectorController extends BaseController {
     private IDetectorService detectorService;
 
     /**
-     * 探测器列表页面
-     *
-     * @return
-     */
-    @RequestMapping("/list")
-    public String detectorList() {
-        return SystemConf.MANAGE_DETECTOR_LIST_BY_PAGE.toString();
-    }
-
-    /**
      * 探测器设备信息列表
      *
      * @return

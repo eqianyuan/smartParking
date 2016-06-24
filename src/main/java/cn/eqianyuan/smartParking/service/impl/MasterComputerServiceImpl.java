@@ -83,12 +83,8 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
             MasterComputerVo masterComputerVo = new MasterComputerVo();
             BeanUtils.copyProperties(masterComputer, masterComputerVo);
 
-            //从探测器数据MAP中获取出探测器状态数据字符串
-            String statusCN = YamlForMapHandleUtil.getValueBykey(masterComputerDataMap, DataMap.Key.STATUS.toString(), masterComputer.getStatus().toString());
-            if (StringUtils.isEmpty(statusCN)) {
-                logger.info("master computer : the id is  [" + masterComputer.getId() + "] object status [" + masterComputer.getStatus() + "] cn is null");
-                statusCN = StringUtils.EMPTY;
-            }
+            //获取探测器状态明文
+            String statusCN = getStatusCN(masterComputerDataMap, masterComputer.getId(), masterComputer.getStatus().toString());
             masterComputerVo.setStatusCN(statusCN);
             masterComputerVos.add(masterComputerVo);
         }
@@ -142,6 +138,58 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
         masterComputer.setName(name);
         masterComputer.setCode(code);
         masterComputerDao.insertSelective(masterComputer);
+    }
+
+    /**
+     * 上位机设备信息对象
+     *
+     * @param id 上位机设备序列编号
+     * @return
+     */
+    public MasterComputerVo object(String id) throws EqianyuanException {
+        if (StringUtils.isEmpty(id)) {
+            logger.info("get object empty , because query id is empty");
+            throw new EqianyuanException(ExceptionMsgConstant.DETECTOR_ID_IS_EMPTY);
+        }
+
+        MasterComputer masterComputer = masterComputerDao.selectByPrimaryKey(id);
+        if (ObjectUtils.isEmpty(masterComputer) ||
+                StringUtils.isEmpty(masterComputer.getId())) {
+            logger.info("get object empty , because id [" + id + "] query data is empty");
+            throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_INFO_NO_EXISTS);
+        }
+
+        MasterComputerVo masterComputerVo = new MasterComputerVo();
+        BeanUtils.copyProperties(masterComputer, masterComputerVo);
+
+        //从数据常量MAP对象中获取探测器数据MAP
+        Map<String, Object> masterComputerDataMap = (Map<String, Object>) YamlForMapHandleUtil.getMapByKey(DataMap.getMap()
+                , DataMap.Key.MASTER_COMPUTER.toString());
+
+        //获取探测器状态明文
+        String statusCN = getStatusCN(masterComputerDataMap, masterComputer.getId(), masterComputer.getStatus().toString());
+        masterComputerVo.setStatusCN(statusCN);
+
+        return masterComputerVo;
+    }
+
+    /**
+     * 获取探测器状态明文
+     *
+     * @param masterComputerDataMap 探测器数据静态资源MAP对象
+     * @param id                    探测器序列编号
+     * @param status                探测器状态
+     * @return
+     */
+    private String getStatusCN(Map<String, Object> masterComputerDataMap, String id, String status) {
+        //从探测器数据MAP中获取出探测器状态数据字符串
+        String statusCN = YamlForMapHandleUtil.getValueBykey(masterComputerDataMap, DataMap.Key.STATUS.toString(), status);
+
+        if (StringUtils.isEmpty(statusCN)) {
+            logger.info("master computer : the id is  [" + id + "] object status [" + status + "] cn is null");
+            statusCN = StringUtils.EMPTY;
+        }
+        return statusCN;
     }
 
     /**

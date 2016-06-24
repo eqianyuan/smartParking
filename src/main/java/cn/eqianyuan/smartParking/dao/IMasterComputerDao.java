@@ -7,17 +7,11 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface IMasterComputerDao {
-    int deleteByPrimaryKey(String id);
-
-    int insert(MasterComputer record);
-
     int insertSelective(MasterComputer record);
 
     MasterComputer selectByPrimaryKey(String id);
 
     int updateByPrimaryKeySelective(MasterComputer record);
-
-    int updateByPrimaryKey(MasterComputer record);
 
     /**
      * 获取数据总条数

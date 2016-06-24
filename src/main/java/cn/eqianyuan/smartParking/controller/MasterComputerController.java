@@ -4,6 +4,7 @@ import cn.eqianyuan.smartParking.common.exception.EqianyuanException;
 import cn.eqianyuan.smartParking.common.request.masterComputer.MasterComputerRequest;
 import cn.eqianyuan.smartParking.common.response.PageResponse;
 import cn.eqianyuan.smartParking.common.response.ServerResponse;
+import cn.eqianyuan.smartParking.common.response.vo.MasterComputerVo;
 import cn.eqianyuan.smartParking.common.util.yamlMapper.SystemConf;
 import cn.eqianyuan.smartParking.service.IMasterComputerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +25,10 @@ public class MasterComputerController extends BaseController {
     private IMasterComputerService masterComputerService;
 
     /**
-     * 上位机列表页面
-     *
-     * @return
-     */
-    @RequestMapping("/list")
-    public String listByPage() {
-        return SystemConf.MANAGE_MASTER_COMPUTER_LIST_BY_PAGE.toString();
-    }
-
-    /**
      * 上位机设备信息列表
      *
+     * @param pageNo   分页页码
+     * @param pageSize 分页每页显示条数
      * @return
      * @throws EqianyuanException
      */
@@ -62,6 +55,14 @@ public class MasterComputerController extends BaseController {
         return new ServerResponse();
     }
 
+    /**
+     * 上位机设备信息添加
+     *
+     * @param name 设备名称
+     * @param code 设备代码
+     * @return
+     * @throws EqianyuanException
+     */
     @RequestMapping("/add")
     @ResponseBody
     public ServerResponse add(@RequestParam(value = "name") String name,
@@ -70,6 +71,26 @@ public class MasterComputerController extends BaseController {
         return new ServerResponse();
     }
 
+    /**
+     * 上位机设备信息
+     *
+     * @param id    上位机序列编号
+     * @return
+     */
+    @RequestMapping("/object")
+    @ResponseBody
+    public ServerResponse object(@RequestParam(value = "id") String id) throws EqianyuanException {
+        MasterComputerVo masterComputerVo = masterComputerService.object(id);
+        return new ServerResponse.ResponseBuilder().data(masterComputerVo).build();
+    }
+
+    /**
+     * 上位机设备信息修改
+     *
+     * @param masterComputerRequest 上位机修改数据请求封装对象
+     * @return
+     * @throws EqianyuanException
+     */
     @RequestMapping("/update")
     @ResponseBody
     public ServerResponse update(MasterComputerRequest masterComputerRequest) throws EqianyuanException {

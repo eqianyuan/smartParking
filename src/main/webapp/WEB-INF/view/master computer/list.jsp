@@ -59,9 +59,10 @@
                                 <tr>
                                     <th><input type="checkbox" class="checkAll"/></th>
                                     <th>序列编号</th>
-                                    <th>设备代码</th>
                                     <th>设备名称</th>
+                                    <th>设备代码</th>
                                     <th>状态</th>
+                                    <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -143,15 +144,16 @@
                                 tableBody += '<tr>'
                                         + '<td><input type="checkbox" class="itemCheck" value="' + this.id + '"/></td>'
                                         + '<td>' + this.id + '</td>'
-                                        + '<td>' + this.code + '</td>'
                                         + '<td>' + this.name + '</td>'
+                                        + '<td>' + this.code + '</td>'
                                         + '<td>' + this.status_cn + '</td>'
+                                        + '<td><button type="button" class="btn btn-outline btn-info update">修改</button>&nbsp;<button type="button" class="btn btn-outline btn-danger singleDelete">注销</button></td>'
                                         + '</tr>';
                             });
 
                             $("#dataTables tbody").html(tableBody);
                         } else {
-                            $("#dataTables tbody").html('<tr class="text-center"><td colspan="5">查无数据</td></tr>');
+                            $("#dataTables tbody").html('<tr class="text-center"><td colspan="6">查无数据</td></tr>');
                         }
                     }
                 });
@@ -213,6 +215,22 @@
                 }
             });
         });
+
+        //单个数据内容删除
+        $("#dataTables tbody").on("click", ".singleDelete", function(){
+            $('#myModal').modal();
+            $(".modal-body").text("是否注销所选数据，被注销数据无法还原！");
+
+            //清空ids集合
+            ids.length = 0;
+            hideOperatorTip();
+            ids.push($(this).parents("tr").find("input[type='checkbox']").val());
+        })
+
+        //数据修改
+        $("#dataTables tbody").on("click", ".update", function(){
+            window.location.href = "/system-manage/gotoPage?url=master computer/update&id="+$(this).parents("tr").find("input[type='checkbox']").val();
+        })
 
         //注册上位机
         $(".add").click(function(){

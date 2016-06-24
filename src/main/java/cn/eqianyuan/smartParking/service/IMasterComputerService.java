@@ -3,6 +3,7 @@ package cn.eqianyuan.smartParking.service;
 import cn.eqianyuan.smartParking.common.exception.EqianyuanException;
 import cn.eqianyuan.smartParking.common.request.masterComputer.MasterComputerRequest;
 import cn.eqianyuan.smartParking.common.response.PageResponse;
+import cn.eqianyuan.smartParking.common.response.vo.MasterComputerVo;
 
 /**
  * 上位机设备业务接口
@@ -34,6 +35,15 @@ public interface IMasterComputerService {
      * @param code 设备代码
      */
     void add(String name, Integer code) throws EqianyuanException;
+
+    /**
+     * 上位机设备信息
+     *
+     * @param id
+     * @return
+     */
+    MasterComputerVo object(String id) throws EqianyuanException;
+
 
     /**
      * 上位机设备信息修改

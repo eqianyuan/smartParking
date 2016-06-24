@@ -28,15 +28,12 @@ public enum SystemConf {
      * 平台字符集
      */
     PLATFORM_CHARSET("UTF-8"),
+
     /**
      * 系统登录页面位置
      */
     SYSTEM_MANAGE_LOGIN_BY_PAGE("login"),
-    SYSTEM_MANAGE_HOME_BY_PAGE("home"),
-    //上位机管理列表页面
-    MANAGE_MASTER_COMPUTER_LIST_BY_PAGE("master computer" + File.separator + "list"),
-    //探测器管理列表页面
-    MANAGE_DETECTOR_LIST_BY_PAGE("detector" + File.separator + "list");
+    SYSTEM_MANAGE_HOME_BY_PAGE("home");
 
     private Object value;
 
