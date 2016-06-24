@@ -45,35 +45,37 @@
                                         <input class="form-control" name="code" placeholder="内容只能是数字">
                                         <p class="help-block tip">tip.</p>
                                     </div>
-                                    <div class="form-group col-xs-4">
-                                        <label>省</label>
-                                        <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-xs-4">
-                                        <label>市</label>
-                                        <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-xs-4">
-                                        <label>区</label>
-                                        <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>
+                                    <div class="row">
+                                        <div class="form-group col-xs-4">
+                                            <label>省</label>
+                                            <select class="form-control">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-xs-4">
+                                            <label>市</label>
+                                            <select class="form-control">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-xs-4">
+                                            <label>区</label>
+                                            <select class="form-control">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <input type="button" class="btn btn-outline btn-success submit" value="注册">
                                     <input type="button" class="btn btn-outline btn-info back" value="返回">
