@@ -28,6 +28,7 @@ public class ExceptionMsgConstant {
 
     //探测器设备序列号为空
     public static final String DETECTOR_ID_IS_EMPTY = "10020001";
+
     //上位机设备序列号为空
     public static final String MASTER_COMPUTER_ID_IS_EMPTY = "10030001";
     //上位机设备名称为空
@@ -38,4 +39,7 @@ public class ExceptionMsgConstant {
     public static final String MASTER_COMPUTER_NAME_CONTENT_TOO_LONG = "10030004";
     //上位机设备信息数据不存在
     public static final String MASTER_COMPUTER_INFO_NO_EXISTS = "10030005";
+
+    //地区-省数据不存在
+    public static final String AREA_PROVINCE_DATA_NO_EXISTS = "10040001";
 }
