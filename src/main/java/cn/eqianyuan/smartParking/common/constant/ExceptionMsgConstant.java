@@ -42,4 +42,12 @@ public class ExceptionMsgConstant {
 
     //地区-省数据不存在
     public static final String AREA_PROVINCE_DATA_NO_EXISTS = "10040001";
+    //地区-省数据编号为空
+    public static final String AREA_PROVINCE_ID_IS_EMPTY = "10040002";
+    //地区-市数据不存在
+    public static final String AREA_CITY_DATA_NO_EXISTS = "10040003";
+    //地区-市数据编号为空
+    public static final String AREA_CITY_ID_IS_EMPTY = "10040004";
+    //地区-区数据不存在
+    public static final String AREA_COUNTY_DATA_NO_EXISTS = "10040005";
 }

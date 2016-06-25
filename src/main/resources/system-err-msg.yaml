@@ -86,4 +86,24 @@
   code: 404
   cn: 不存在省的数据
   en: the province data no exists
+
+10040002:
+  code: 404
+  cn: 省份编号不能为空
+  en: the province id can't empty
+
+10040003:
+  code: 404
+  cn: 不存在市的数据
+  en: the city data no exists
+
+10040004:
+  code: 404
+  cn: 市编号不能为空
+  en: the city id can't empty
+
+10040005:
+  code: 404
+  cn: 不存在区的数据
+  en: the county data no exists
 ##### 地区错误描述 结束 #####

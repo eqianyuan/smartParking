@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.eqianyuan.smartParking.dao.ICityDao">
+    <resultMap id="BaseResultMap" type="cn.eqianyuan.smartParking.entity.City">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="provinceId" property="provinceId" jdbcType="VARCHAR"/>
+        <result column="cityId" property="cityId" jdbcType="VARCHAR"/>
+        <result column="cityName" property="cityName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, provinceId, cityId, cityName
+  </sql>
+    <select id="selectByList" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List" />
+        from city
+        where provinceId = #{provinceId}
+    </select>
+</mapper>
