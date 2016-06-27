@@ -31,10 +31,11 @@ public interface IMasterComputerService {
     /**
      * 上位机设备信息添加
      *
-     * @param name 设备名称
-     * @param code 设备代码
+     * @param masterComputerRequest 上位机添加数据请求封装对象
+     * @return
+     * @throws EqianyuanException
      */
-    void add(String name, Integer code) throws EqianyuanException;
+    void add(MasterComputerRequest masterComputerRequest) throws EqianyuanException;
 
     /**
      * 上位机设备信息

@@ -12,8 +12,16 @@
   </sql>
     <select id="selectByList" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from city
         where provinceId = #{provinceId}
+    </select>
+
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from city
+        where provinceId = ${provinceId}
+        and cityId = ${cityId}
     </select>
 </mapper>

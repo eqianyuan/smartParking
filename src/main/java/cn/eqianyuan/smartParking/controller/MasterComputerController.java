@@ -5,7 +5,6 @@ import cn.eqianyuan.smartParking.common.request.masterComputer.MasterComputerReq
 import cn.eqianyuan.smartParking.common.response.PageResponse;
 import cn.eqianyuan.smartParking.common.response.ServerResponse;
 import cn.eqianyuan.smartParking.common.response.vo.MasterComputerVo;
-import cn.eqianyuan.smartParking.common.util.yamlMapper.SystemConf;
 import cn.eqianyuan.smartParking.service.IMasterComputerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,23 +57,21 @@ public class MasterComputerController extends BaseController {
     /**
      * 上位机设备信息添加
      *
-     * @param name 设备名称
-     * @param code 设备代码
+     * @param masterComputerRequest 上位机添加数据请求封装对象
      * @return
      * @throws EqianyuanException
      */
     @RequestMapping("/add")
     @ResponseBody
-    public ServerResponse add(@RequestParam(value = "name") String name,
-                              @RequestParam(value = "code") Integer code) throws EqianyuanException {
-        masterComputerService.add(name, code);
+    public ServerResponse add(MasterComputerRequest masterComputerRequest) throws EqianyuanException {
+        masterComputerService.add(masterComputerRequest);
         return new ServerResponse();
     }
 
     /**
      * 上位机设备信息
      *
-     * @param id    上位机序列编号
+     * @param id 上位机序列编号
      * @return
      */
     @RequestMapping("/object")

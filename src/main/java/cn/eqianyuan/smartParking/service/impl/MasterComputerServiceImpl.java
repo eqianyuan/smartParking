@@ -9,8 +9,14 @@ import cn.eqianyuan.smartParking.common.response.vo.MasterComputerVo;
 import cn.eqianyuan.smartParking.common.util.YamlForMapHandleUtil;
 import cn.eqianyuan.smartParking.common.util.yamlMapper.DataMap;
 import cn.eqianyuan.smartParking.common.util.yamlMapper.SystemConf;
+import cn.eqianyuan.smartParking.dao.ICityDao;
+import cn.eqianyuan.smartParking.dao.ICountyDao;
 import cn.eqianyuan.smartParking.dao.IMasterComputerDao;
+import cn.eqianyuan.smartParking.dao.IProvinceDao;
+import cn.eqianyuan.smartParking.entity.City;
+import cn.eqianyuan.smartParking.entity.County;
 import cn.eqianyuan.smartParking.entity.MasterComputer;
+import cn.eqianyuan.smartParking.entity.Province;
 import cn.eqianyuan.smartParking.service.IMasterComputerService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -35,10 +41,24 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
     @Autowired
     private IMasterComputerDao masterComputerDao;
 
+    @Autowired
+    private IProvinceDao provinceDao;
+
+    @Autowired
+    private ICityDao cityDao;
+
+    @Autowired
+    private ICountyDao countyDao;
+
     private Logger logger = Logger.getLogger(this.getClass());
 
     //上位机名称内容最大字节长度
     private static final int MASTER_COMPUTER_NAME_CONTENT_MAX_LENGTH = 100;
+    //上位机通信代码最大内容字符长度
+    private static final int MASTER_COMPUTER_CODE_CONTENT_MAX_LENGTH = 11;
+    //上位机详细地址内容最大字节长度
+    private static final int MASTER_COMPUTER_ADDRESS_CONTENT_MAX_LENGTH = 300;
+
 
     /**
      * 根据分页条件获取上位机数据列表
@@ -110,22 +130,49 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
     /**
      * 上位机设备信息添加
      *
-     * @param name 设备名称
-     * @param code 设备代码
+     * @param masterComputerRequest 上位机添加数据请求封装对象
+     * @throws EqianyuanException
      */
-    public void add(String name, Integer code) throws EqianyuanException {
-        if (StringUtils.isEmpty(name)) {
+    public void add(MasterComputerRequest masterComputerRequest) throws EqianyuanException {
+        //判断设备名称是否为空
+        if (StringUtils.isEmpty(masterComputerRequest.getName())) {
             logger.info("add fail , because name is empty");
             throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_NAME_IS_EMPTY);
         }
 
-        if (ObjectUtils.isEmpty(code)) {
+        //判断设备通信代码是否为空
+        if (StringUtils.isEmpty(masterComputerRequest.getCode())) {
             logger.info("add fail , because code is empty");
             throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_CODE_IS_EMPTY);
         }
 
+        //判断省是否为空
+        if (StringUtils.isEmpty(masterComputerRequest.getProvince())) {
+            logger.info("add fail , because province is empty");
+            throw new EqianyuanException(ExceptionMsgConstant.AREA_PROVINCE_ID_IS_EMPTY);
+        }
+
+        //判断市是否为空
+        if (StringUtils.isEmpty(masterComputerRequest.getCity())) {
+            logger.info("add fail , because city is empty");
+            throw new EqianyuanException(ExceptionMsgConstant.AREA_CITY_ID_IS_EMPTY);
+        }
+
+        //判断区是否为空
+        if (StringUtils.isEmpty(masterComputerRequest.getCounty())) {
+            logger.info("add fail , because county is empty");
+            throw new EqianyuanException(ExceptionMsgConstant.AREA_COUNTY_ID_IS_EMPTY);
+        }
+
+        //判断详细地址是否为空
+        if (StringUtils.isEmpty(masterComputerRequest.getAddress())) {
+            logger.info("add fail , because address is empty");
+            throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_ADDRESS_IS_EMPTY);
+        }
+
+        //判断设备名称内容字节长度是否超出DB许可长度范围
         try {
-            if (name.getBytes(SystemConf.PLATFORM_CHARSET.toString()).length > MASTER_COMPUTER_NAME_CONTENT_MAX_LENGTH) {
+            if (masterComputerRequest.getName().getBytes(SystemConf.PLATFORM_CHARSET.toString()).length > MASTER_COMPUTER_NAME_CONTENT_MAX_LENGTH) {
                 logger.info("add fail , because name content too long");
                 throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_NAME_CONTENT_TOO_LONG);
             }
@@ -134,9 +181,61 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
             throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_GET_BYTE_FAIL);
         }
 
+        //判断设备通信代码内容长度是否超出DB许可长度
+        if (masterComputerRequest.getCode().length() > MASTER_COMPUTER_CODE_CONTENT_MAX_LENGTH) {
+            logger.warn("add fial , because code content too long");
+            throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_CODE_CONTENT_TOO_LONG);
+        }
+
+        //判断设备通信代码值是否可以正确转换为int类型
+        try {
+            Integer.parseInt(masterComputerRequest.getCode());
+        } catch (NumberFormatException e) {
+            logger.warn("add fail , because code format from String to Integer error");
+            throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_CODE_IS_NOT_NUMBER);
+        }
+
+        //根据省编号查询省数据，检查编号正确性
+        Province province = provinceDao.selectById(masterComputerRequest.getProvince());
+        if (ObjectUtils.isEmpty(province)) {
+            logger.info("add fail , because select province by province id [" + masterComputerRequest.getProvince() + "] result is null");
+            throw new EqianyuanException(ExceptionMsgConstant.AREA_PROVINCE_DATA_NO_EXISTS);
+        }
+
+        //根据市编号查询市数据，检查编号正确性
+        City city = cityDao.selectById(masterComputerRequest.getProvince(), masterComputerRequest.getCity());
+        if (ObjectUtils.isEmpty(city)) {
+            logger.info("add fail , because select city by city id [" + masterComputerRequest.getCity() + "] result is null");
+            throw new EqianyuanException(ExceptionMsgConstant.AREA_CITY_DATA_NO_EXISTS);
+        }
+
+        //根据区编号查询区数据，检查编号正确性
+        County county = countyDao.selectById(masterComputerRequest.getCity(), masterComputerRequest.getCounty());
+        if (ObjectUtils.isEmpty(county)) {
+            logger.info("add fail , because select county by county id [" + masterComputerRequest.getCounty() + "] result is null");
+            throw new EqianyuanException(ExceptionMsgConstant.AREA_COUNTY_DATA_NO_EXISTS);
+        }
+
+        //判断详细地址内容长度是否超出DB许可长度
+        try {
+            if (masterComputerRequest.getAddress().getBytes(SystemConf.PLATFORM_CHARSET.toString()).length > MASTER_COMPUTER_ADDRESS_CONTENT_MAX_LENGTH) {
+                logger.info("add fail , because address content too long");
+                throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_NAME_CONTENT_TOO_LONG);
+            }
+        } catch (UnsupportedEncodingException e) {
+            logger.info("add fail , because address content getBytes(" + SystemConf.PLATFORM_CHARSET.toString() + ") fail");
+            throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_GET_BYTE_FAIL);
+        }
+
+        //封装DB插入对象
         MasterComputer masterComputer = new MasterComputer();
-        masterComputer.setName(name);
-        masterComputer.setCode(code);
+        masterComputer.setName(masterComputerRequest.getName());
+        masterComputer.setCode(Integer.parseInt(masterComputerRequest.getCode()));
+        masterComputer.setProvince(masterComputerRequest.getProvince());
+        masterComputer.setCity(masterComputerRequest.getCity());
+        masterComputer.setCounty(masterComputerRequest.getCounty());
+        masterComputer.setAddress(masterComputerRequest.getAddress());
+        masterComputer.setDescription(masterComputerRequest.getDescription());
         masterComputerDao.insertSelective(masterComputer);
     }
 

@@ -39,6 +39,14 @@ public class ExceptionMsgConstant {
     public static final String MASTER_COMPUTER_NAME_CONTENT_TOO_LONG = "10030004";
     //上位机设备信息数据不存在
     public static final String MASTER_COMPUTER_INFO_NO_EXISTS = "10030005";
+    //上位机设备归属详细地址为空
+    public static final String MASTER_COMPUTER_ADDRESS_IS_EMPTY = "10030006";
+    //上位机设备编号不是数字
+    public static final String MASTER_COMPUTER_CODE_IS_NOT_NUMBER = "10030007";
+    //上位机设备编号内容太长
+    public static final String MASTER_COMPUTER_CODE_CONTENT_TOO_LONG = "10030008";
+    //上位机设备归属详细地址内容太长
+    public static final String MASTER_COMPUTER_ADDRESS_CONTENT_TOO_LONG = "10030009";
 
     //地区-省数据不存在
     public static final String AREA_PROVINCE_DATA_NO_EXISTS = "10040001";
@@ -50,4 +58,6 @@ public class ExceptionMsgConstant {
     public static final String AREA_CITY_ID_IS_EMPTY = "10040004";
     //地区-区数据不存在
     public static final String AREA_COUNTY_DATA_NO_EXISTS = "10040005";
+    //地区-区数据编号唯恐
+    public static final String AREA_COUNTY_ID_IS_EMPTY = "10040006";
 }

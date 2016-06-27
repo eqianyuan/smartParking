@@ -79,6 +79,26 @@
   code: 500
   cn: 设备信息数据不存在
   en: the data no exists
+
+10030006:
+  code: 404
+  cn: 设备地址不能为空
+  en: the address can't empty
+
+10030007:
+  code: 500
+  cn: 设备编号必须是数字
+  en: the code must be a number
+
+10030008:
+  code: 500
+  cn: 设备编号内容太长
+  en: the code content too long
+
+10030009:
+  code: 500
+  cn: 设备地址内容太长
+  en: the address content too long
 ##### 上位机错误描述 结束 #####
 
 ##### 地区错误描述 开始 #####
@@ -106,4 +126,9 @@
   code: 404
   cn: 不存在区的数据
   en: the county data no exists
+
+10040006:
+  code: 404
+  cn: 区编号不能为空
+  en: the county id can't empty
 ##### 地区错误描述 结束 #####

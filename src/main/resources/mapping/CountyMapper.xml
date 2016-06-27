@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.eqianyuan.smartParking.dao.ICountyDao" >
-  <resultMap id="BaseResultMap" type="cn.eqianyuan.smartParking.entity.County" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="cityId" property="cityId" jdbcType="VARCHAR" />
-    <result column="countyId" property="countyId" jdbcType="VARCHAR" />
-    <result column="countyName" property="countyName" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="cn.eqianyuan.smartParking.dao.ICountyDao">
+    <resultMap id="BaseResultMap" type="cn.eqianyuan.smartParking.entity.County">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="cityId" property="cityId" jdbcType="VARCHAR"/>
+        <result column="countyId" property="countyId" jdbcType="VARCHAR"/>
+        <result column="countyName" property="countyName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, cityId, countyId, countyName
   </sql>
-  <select id="selectByList" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select
-    <include refid="Base_Column_List" />
-    from county
-    where cityId = #{cityId}
-  </select>
+    <select id="selectByList" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from county
+        where cityId = #{cityId}
+    </select>
+
+    <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from county
+        where cityId = ${cityId}
+        and countyId = ${countyId}
+    </select>
 </mapper>
