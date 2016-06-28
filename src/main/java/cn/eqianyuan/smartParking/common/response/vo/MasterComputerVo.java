@@ -15,6 +15,7 @@ public class MasterComputerVo {
     //设备状态
     private Integer status;
 
+    //设备状态明文
     @JSONField(name = "status_cn")
     private String statusCN;
 
@@ -32,6 +33,18 @@ public class MasterComputerVo {
 
     //设备描述
     private String description;
+
+    //省地址名称
+    @JSONField(name = "province_name")
+    private String provinceName;
+
+    //市地址名称
+    @JSONField(name = "city_name")
+    private String cityName;
+
+    //区地质名称
+    @JSONField(name = "county_name")
+    private String countyName;
 
     public String getId() {
         return id;
@@ -111,5 +124,29 @@ public class MasterComputerVo {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getCountyName() {
+        return countyName;
+    }
+
+    public void setCountyName(String countyName) {
+        this.countyName = countyName;
     }
 }

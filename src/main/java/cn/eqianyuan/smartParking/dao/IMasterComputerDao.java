@@ -34,4 +34,13 @@ public interface IMasterComputerDao {
      * @return
      */
     int deleteById(@Param("id") String... id);
+
+    /**
+     * 根据地区和设备CODE查询设备数据
+     *
+     * @param county
+     * @param code
+     * @return
+     */
+    MasterComputer selectByCode(@Param("county") String county, @Param("code") String code);
 }

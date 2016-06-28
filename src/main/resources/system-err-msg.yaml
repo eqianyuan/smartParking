@@ -99,6 +99,11 @@
   code: 500
   cn: 设备地址内容太长
   en: the address content too long
+
+10030010:
+  code: 500
+  cn: 设备编号已经在该地区注册
+  en: the code has been registered in the region
 ##### 上位机错误描述 结束 #####
 
 ##### 地区错误描述 开始 #####

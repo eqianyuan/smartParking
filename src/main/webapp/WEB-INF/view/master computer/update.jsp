@@ -40,12 +40,10 @@
                                     <div class="form-group">
                                         <label>设备名称</label>
                                         <input class="form-control" name="name">
-                                        <p class="help-block tip">tip.</p>
                                     </div>
                                     <div class="form-group">
                                         <label>设备代码</label>
                                         <input class="form-control" name="code" placeholder="内容只能是数字">
-                                        <p class="help-block tip">tip.</p>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-xs-4">
@@ -70,7 +68,10 @@
                                     <div class="form-group">
                                         <label>设备地址</label>
                                         <input class="form-control" name="address">
-                                        <p class="help-block tip">tip.</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>设备描述</label>
+                                        <textarea class="form-control" rows="3" name="description"></textarea>
                                     </div>
                                     <input type="button" class="btn btn-outline btn-success submit" value="保存">
                                     <input type="button" class="btn btn-outline btn-info back" value="返回">
@@ -119,11 +120,6 @@
         //获取区级数据地址
         var getCountyUrl = "/getCounty";
 
-        /**
-         * 获取省级数据
-         */
-        getArea(getProvinceUrl, null, "setProvince");
-
         //省点击事件
         $(".province").change(function () {
             getArea(getCityUrl, {provinceId: $(this).val()}, "setCity");
@@ -138,14 +134,26 @@
          * 填充省级数据
          */
         var setProvince = function (data) {
-            //还原市和区数据
-            $(".city").html("<option value=''>-- 请选择市 --</option>");
-            $(".county").html("<option value=''>-- 请选择区 --</option>");
+            /*
+             判断是否为修改首次加载，只有当时首次加载时，才不需要清空市区下拉数据
+             否则就是联动操作，每次都需要清空市区的下拉数据
+             */
+            if (initLoadByArea > 3) {
+                //还原市和区数据
+                $(".city").html("<option value=''>-- 请选择市 --</option>");
+                $(".county").html("<option value=''>-- 请选择区 --</option>");
+            }else{
+                initLoadByArea ++ ;
+            }
 
             if (data != null && data.length > 0) {
                 var option = "<option value=''>-- 请选择省 --</option>";
                 $(data).each(function () {
-                    option += '<option value="' + this.province_id + '">' + this.province_name + '</option>';
+                    var selected = "";
+                    if (province == this.province_id) {
+                        selected = 'selected';
+                    }
+                    option += '<option value="' + this.province_id + '" ' + selected + '>' + this.province_name + '</option>';
                 });
 
                 $(".province").html(option);
@@ -156,13 +164,25 @@
          * 填充市级数据
          */
         var setCity = function (data) {
-            //还原区数据
-            $(".county").html("<option value=''>-- 请选择区 --</option>");
+            /*
+             判断是否为修改首次加载，只有当时首次加载时，才不需要清空区下拉数据
+             否则就是联动操作，每次都需要清空区的下拉数据
+             */
+            if (initLoadByArea > 3) {
+                //还原区数据
+                $(".county").html("<option value=''>-- 请选择区 --</option>");
+            }else{
+                initLoadByArea ++ ;
+            }
 
             if (data != null && data.length > 0) {
                 var option = "<option value=''>-- 请选择市 --</option>";
                 $(data).each(function () {
-                    option += '<option value="' + this.city_id + '">' + this.city_name + '</option>';
+                    var selected = "";
+                    if (city == this.city_id) {
+                        selected = 'selected';
+                    }
+                    option += '<option value="' + this.city_id + '" ' + selected + '>' + this.city_name + '</option>';
                 });
 
                 $(".city").html(option);
@@ -173,10 +193,19 @@
          * 填充区级数据
          */
         var setCounty = function (data) {
+            if(initLoadByArea < 3){
+                //变更初始加载变量，表示初始加载已经结束
+                initLoadByArea ++;
+            }
+
             if (data != null && data.length > 0) {
                 var option = "<option value=''>-- 请选择区 --</option>";
                 $(data).each(function () {
-                    option += '<option value="' + this.county_id + '">' + this.county_name + '</option>';
+                    var selected = "";
+                    if (county == this.county_id) {
+                        selected = 'selected';
+                    }
+                    option += '<option value="' + this.county_id + '" ' + selected + '>' + this.county_name + '</option>';
                 });
 
                 $(".county").html(option);
@@ -188,18 +217,29 @@
             url: "/system-manage/masterComputer/object",
             data: {id: "${param.id}"},
             success: function (response) {
-                if(response.code == "200"){
+                //全局变量：地区数据首次加载，只有首次加载的时候，省市区才需要全部都要有下拉数据，省市区共加载3次，所以初始为1，当值达到或超出3次时，则认定位非初始加载
+                initLoadByArea = 1;
+                if (response.code == "200") {
                     var _this = response.data;
                     $("input[name='name']").val(_this.name);
                     $("input[name='code']").val(_this.code);
-                    $("select[name='province']").val(this.province);
-                    $("select[name='city']").val(this.city);
-                    $("select[name='county']").val(this.county);
-                }else{
+                    $("input[name='address']").val(_this.address);
+                    $("textarea[name='description']").val(_this.description);
+                    province = _this.province;
+                    city = _this.city;
+                    county = _this.county;
+                } else {
                     $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);
                     //3秒后自动关闭警告框
                     setTimeout("hideOperatorTip()", 3000);
                 }
+
+                //获取省级数据
+                getArea(getProvinceUrl, null, "setProvince");
+                //获取市级数据
+                getArea(getCityUrl, {provinceId: province}, "setCity");
+                //获取区级数据
+                getArea(getCountyUrl, {cityId: city}, "setCounty");
             }
         });
 
@@ -233,7 +273,7 @@
     /**
      * 隐藏警告框
      */
-    function hideOperatorTip(){
+    function hideOperatorTip() {
         $("#form-tip").addClass("hidden")
         window.history.go(-1);
     }

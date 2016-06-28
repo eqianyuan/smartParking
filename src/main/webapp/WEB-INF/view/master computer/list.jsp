@@ -62,6 +62,9 @@
                                     <th>设备名称</th>
                                     <th>设备代码</th>
                                     <th>状态</th>
+                                    <th>所在省</th>
+                                    <th>所在市</th>
+                                    <th>所在区</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -147,7 +150,13 @@
                                         + '<td>' + this.name + '</td>'
                                         + '<td>' + this.code + '</td>'
                                         + '<td>' + this.status_cn + '</td>'
-                                        + '<td><button type="button" class="btn btn-outline btn-info update">修改</button>&nbsp;<button type="button" class="btn btn-outline btn-danger singleDelete">注销</button></td>'
+                                        + '<td>' + this.province_name + '</td>'
+                                        + '<td>' + this.city_name + '</td>'
+                                        + '<td>' + this.county_name + '</td>'
+                                        + '<td>' +
+                                        '<button type="button" class="btn btn-outline btn-info detail">详情</button>&nbsp;' +
+                                        '<button type="button" class="btn btn-outline btn-warning update">修改</button>&nbsp;' +
+                                        '<button type="button" class="btn btn-outline btn-danger singleDelete">注销</button></td>'
                                         + '</tr>';
                             });
 
@@ -230,6 +239,11 @@
         //数据修改
         $("#dataTables tbody").on("click", ".update", function(){
             window.location.href = "/system-manage/gotoPage?url=master computer/update&id="+$(this).parents("tr").find("input[type='checkbox']").val();
+        })
+
+        //数据详细信息
+        $("#dataTables tbody").on("click", ".detail", function(){
+            window.location.href = "/system-manage/gotoPage?url=master computer/detail&id="+$(this).parents("tr").find("input[type='checkbox']").val();
         })
 
         //注册上位机

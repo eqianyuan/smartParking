@@ -47,6 +47,8 @@ public class ExceptionMsgConstant {
     public static final String MASTER_COMPUTER_CODE_CONTENT_TOO_LONG = "10030008";
     //上位机设备归属详细地址内容太长
     public static final String MASTER_COMPUTER_ADDRESS_CONTENT_TOO_LONG = "10030009";
+    //地区已经存在相同编号的上位机设备数据
+    public static final String MASTER_COMPUTER_DATA_IS_EXISTS = "10030010";
 
     //地区-省数据不存在
     public static final String AREA_PROVINCE_DATA_NO_EXISTS = "10040001";

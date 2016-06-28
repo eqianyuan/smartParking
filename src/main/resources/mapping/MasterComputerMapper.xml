@@ -1,165 +1,125 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.eqianyuan.smartParking.dao.IMasterComputerDao">
-    <resultMap id="BaseResultMap" type="cn.eqianyuan.smartParking.entity.MasterComputer" >
-        <id column="id" property="id" jdbcType="VARCHAR" />
-        <result column="code" property="code" jdbcType="INTEGER" />
-        <result column="name" property="name" jdbcType="VARCHAR" />
-        <result column="status" property="status" jdbcType="INTEGER" />
-        <result column="address" property="address" jdbcType="VARCHAR" />
-        <result column="province" property="province" jdbcType="VARCHAR" />
-        <result column="city" property="city" jdbcType="VARCHAR" />
-        <result column="county" property="county" jdbcType="VARCHAR" />
+    <resultMap id="BaseResultMap" type="cn.eqianyuan.smartParking.entity.MasterComputer">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="county" property="county" jdbcType="VARCHAR"/>
     </resultMap>
-    <resultMap id="ResultMapWithBLOBs" type="cn.eqianyuan.smartParking.entity.MasterComputer" extends="BaseResultMap" >
-        <result column="description" property="description" jdbcType="LONGVARCHAR" />
+    <resultMap id="ResultMapWithBLOBs" type="cn.eqianyuan.smartParking.entity.MasterComputer" extends="BaseResultMap">
+        <result column="description" property="description" jdbcType="LONGVARCHAR"/>
     </resultMap>
-    <sql id="Base_Column_List" >
+    <sql id="Base_Column_List">
     id, code, name, status, address, province, city, county
   </sql>
-    <sql id="Blob_Column_List" >
+    <sql id="Blob_Column_List">
         description
     </sql>
-    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         ,
-        <include refid="Blob_Column_List" />
+        <include refid="Blob_Column_List"/>
         from master_computer
         where id = #{id,jdbcType=VARCHAR}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-        delete from master_computer
-        where id = #{id,jdbcType=VARCHAR}
-    </delete>
-    <insert id="insert" parameterType="cn.eqianyuan.smartParking.entity.MasterComputer" >
-        <selectKey keyProperty="id" resultType="String" order="BEFORE">
-            select replace(uuid(),'-','') from dual
-        </selectKey>
-        insert into master_computer (id, code, name,
-        status, address, province,
-        city, county, description
-        )
-        values (#{id,jdbcType=VARCHAR}, #{code,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
-        #{status,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR},
-        #{city,jdbcType=VARCHAR}, #{county,jdbcType=VARCHAR}, #{description,jdbcType=LONGVARCHAR}
-        )
-    </insert>
-    <insert id="insertSelective" parameterType="cn.eqianyuan.smartParking.entity.MasterComputer" >
+    <insert id="insertSelective" parameterType="cn.eqianyuan.smartParking.entity.MasterComputer">
         <selectKey keyProperty="id" resultType="String" order="BEFORE">
             select replace(uuid(),'-','') from dual
         </selectKey>
         insert into master_computer
-        <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="id != null" >
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
                 id,
             </if>
-            <if test="code != null" >
+            <if test="code != null">
                 code,
             </if>
-            <if test="name != null" >
+            <if test="name != null">
                 name,
             </if>
-            <if test="status != null" >
+            <if test="status != null">
                 status,
             </if>
-            <if test="address != null" >
+            <if test="address != null">
                 address,
             </if>
-            <if test="province != null" >
+            <if test="province != null">
                 province,
             </if>
-            <if test="city != null" >
+            <if test="city != null">
                 city,
             </if>
-            <if test="county != null" >
+            <if test="county != null">
                 county,
             </if>
-            <if test="description != null" >
+            <if test="description != null">
                 description,
             </if>
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="id != null" >
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
                 #{id,jdbcType=VARCHAR},
             </if>
-            <if test="code != null" >
+            <if test="code != null">
                 #{code,jdbcType=INTEGER},
             </if>
-            <if test="name != null" >
+            <if test="name != null">
                 #{name,jdbcType=VARCHAR},
             </if>
-            <if test="status != null" >
+            <if test="status != null">
                 #{status,jdbcType=INTEGER},
             </if>
-            <if test="address != null" >
+            <if test="address != null">
                 #{address,jdbcType=VARCHAR},
             </if>
-            <if test="province != null" >
+            <if test="province != null">
                 #{province,jdbcType=VARCHAR},
             </if>
-            <if test="city != null" >
+            <if test="city != null">
                 #{city,jdbcType=VARCHAR},
             </if>
-            <if test="county != null" >
+            <if test="county != null">
                 #{county,jdbcType=VARCHAR},
             </if>
-            <if test="description != null" >
+            <if test="description != null">
                 #{description,jdbcType=LONGVARCHAR},
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="cn.eqianyuan.smartParking.entity.MasterComputer" >
+    <update id="updateByPrimaryKeySelective" parameterType="cn.eqianyuan.smartParking.entity.MasterComputer">
         update master_computer
-        <set >
-            <if test="code != null" >
+        <set>
+            <if test="code != null">
                 code = #{code,jdbcType=INTEGER},
             </if>
-            <if test="name != null" >
+            <if test="name != null">
                 name = #{name,jdbcType=VARCHAR},
             </if>
-            <if test="status != null" >
+            <if test="status != null">
                 status = #{status,jdbcType=INTEGER},
             </if>
-            <if test="address != null" >
+            <if test="address != null">
                 address = #{address,jdbcType=VARCHAR},
             </if>
-            <if test="province != null" >
+            <if test="province != null">
                 province = #{province,jdbcType=VARCHAR},
             </if>
-            <if test="city != null" >
+            <if test="city != null">
                 city = #{city,jdbcType=VARCHAR},
             </if>
-            <if test="county != null" >
+            <if test="county != null">
                 county = #{county,jdbcType=VARCHAR},
             </if>
-            <if test="description != null" >
+            <if test="description != null">
                 description = #{description,jdbcType=LONGVARCHAR},
             </if>
         </set>
-        where id = #{id,jdbcType=VARCHAR}
-    </update>
-    <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.eqianyuan.smartParking.entity.MasterComputer" >
-        update master_computer
-        set code = #{code,jdbcType=INTEGER},
-        name = #{name,jdbcType=VARCHAR},
-        status = #{status,jdbcType=INTEGER},
-        address = #{address,jdbcType=VARCHAR},
-        province = #{province,jdbcType=VARCHAR},
-        city = #{city,jdbcType=VARCHAR},
-        county = #{county,jdbcType=VARCHAR},
-        description = #{description,jdbcType=LONGVARCHAR}
-        where id = #{id,jdbcType=VARCHAR}
-    </update>
-    <update id="updateByPrimaryKey" parameterType="cn.eqianyuan.smartParking.entity.MasterComputer" >
-        update master_computer
-        set code = #{code,jdbcType=INTEGER},
-        name = #{name,jdbcType=VARCHAR},
-        status = #{status,jdbcType=INTEGER},
-        address = #{address,jdbcType=VARCHAR},
-        province = #{province,jdbcType=VARCHAR},
-        city = #{city,jdbcType=VARCHAR},
-        county = #{county,jdbcType=VARCHAR}
         where id = #{id,jdbcType=VARCHAR}
     </update>
     <select id="countByPagination" resultType="java.lang.Long">
@@ -167,9 +127,9 @@
   </select>
     <select id="selectByPagination" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         ,
-        <include refid="Blob_Column_List" />
+        <include refid="Blob_Column_List"/>
         from master_computer
         limit ${page.pageNo}, ${page.pageSize}
     </select>
@@ -180,4 +140,13 @@
             #{item}
         </foreach>
     </delete>
+    <select id="selectByCode" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from master_computer
+        where county = ${county}
+        and code = ${code}
+    </select>
 </mapper>

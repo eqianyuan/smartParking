@@ -48,22 +48,30 @@
                                     <div class="row">
                                         <div class="form-group col-xs-4">
                                             <label>省</label>
-                                            <select class="form-control province">
+                                            <select class="form-control province" name="province">
                                                 <option value="">-- 请选择省 --</option>
                                             </select>
                                         </div>
                                         <div class="form-group col-xs-4">
                                             <label>市</label>
-                                            <select class="form-control city">
+                                            <select class="form-control city" name="city">
                                                 <option value="">-- 请选择市 --</option>
                                             </select>
                                         </div>
                                         <div class="form-group col-xs-4">
                                             <label>区</label>
-                                            <select class="form-control county">
+                                            <select class="form-control county" name="county">
                                                 <option value="">-- 请选择区 --</option>
                                             </select>
                                         </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>设备地址</label>
+                                        <input class="form-control" name="address">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>设备描述</label>
+                                        <textarea class="form-control" rows="3" name="description"></textarea>
                                     </div>
                                     <input type="button" class="btn btn-outline btn-success submit" value="注册">
                                     <input type="button" class="btn btn-outline btn-info back" value="返回">

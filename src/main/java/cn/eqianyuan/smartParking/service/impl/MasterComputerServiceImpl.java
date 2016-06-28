@@ -106,6 +106,25 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
             //获取探测器状态明文
             String statusCN = getStatusCN(masterComputerDataMap, masterComputer.getId(), masterComputer.getStatus().toString());
             masterComputerVo.setStatusCN(statusCN);
+
+            //根据省编号获取省地址
+            Province province = provinceDao.selectById(masterComputer.getProvince());
+            if (!ObjectUtils.isEmpty(province)) {
+                masterComputerVo.setProvinceName(province.getProvinceName());
+            }
+
+            //根据市编号获取市地址
+            City city = cityDao.selectById(masterComputer.getProvince(), masterComputer.getCity());
+            if (!ObjectUtils.isEmpty(city)) {
+                masterComputerVo.setCityName(city.getCityName());
+            }
+
+            //根据区编号获取区地址
+            County county = countyDao.selectById(masterComputer.getCity(), masterComputer.getCounty());
+            if (!ObjectUtils.isEmpty(county)) {
+                masterComputerVo.setCountyName(county.getCountyName());
+            }
+
             masterComputerVos.add(masterComputerVo);
         }
 
@@ -136,6 +155,14 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
     public void add(MasterComputerRequest masterComputerRequest) throws EqianyuanException {
         //数据写库校验
         editValidation(masterComputerRequest);
+
+        //根据地区区和code查询数据，校验省市区地理位置下的设备code是否已经存在
+        MasterComputer masterComputerByQuery = masterComputerDao.selectByCode(masterComputerRequest.getCounty(), masterComputerRequest.getCode());
+        if (!ObjectUtils.isEmpty(masterComputerByQuery)) {
+            logger.info("add fail , because select by code [" + masterComputerRequest.getCode() + "] , county [" + masterComputerRequest.getCounty() + "] data is exists");
+            throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_DATA_IS_EXISTS);
+        }
+
         //封装DB插入对象
         MasterComputer masterComputer = getMasterComputer(masterComputerRequest);
         masterComputerDao.insertSelective(masterComputer);
@@ -253,7 +280,7 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
         try {
             if (masterComputerRequest.getAddress().getBytes(SystemConf.PLATFORM_CHARSET.toString()).length > MASTER_COMPUTER_ADDRESS_CONTENT_MAX_LENGTH) {
                 logger.info("add fail , because address content too long");
-                throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_NAME_CONTENT_TOO_LONG);
+                throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_ADDRESS_CONTENT_TOO_LONG);
             }
         } catch (UnsupportedEncodingException e) {
             logger.info("add fail , because address content getBytes(" + SystemConf.PLATFORM_CHARSET.toString() + ") fail");
@@ -290,6 +317,24 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
         //获取探测器状态明文
         String statusCN = getStatusCN(masterComputerDataMap, masterComputer.getId(), masterComputer.getStatus().toString());
         masterComputerVo.setStatusCN(statusCN);
+
+        //根据省编号获取省地址
+        Province province = provinceDao.selectById(masterComputer.getProvince());
+        if (!ObjectUtils.isEmpty(province)) {
+            masterComputerVo.setProvinceName(province.getProvinceName());
+        }
+
+        //根据市编号获取市地址
+        City city = cityDao.selectById(masterComputer.getProvince(), masterComputer.getCity());
+        if (!ObjectUtils.isEmpty(city)) {
+            masterComputerVo.setCityName(city.getCityName());
+        }
+
+        //根据区编号获取区地址
+        County county = countyDao.selectById(masterComputer.getCity(), masterComputer.getCounty());
+        if (!ObjectUtils.isEmpty(county)) {
+            masterComputerVo.setCountyName(county.getCountyName());
+        }
 
         return masterComputerVo;
     }
@@ -328,6 +373,20 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
 
         //DB写库数据校验
         editValidation(masterComputerRequest);
+
+        //根据设备主键序列号查询设备数据
+        MasterComputer masterComputerByOriginal = masterComputerDao.selectByPrimaryKey(masterComputerRequest.getId());
+
+        //检查待修改数据中的设备code是否和原数据设备code相同，不相同的情况下需要校验地区下CODE是否重复
+        if (!StringUtils.equals(masterComputerRequest.getCode(), String.valueOf(masterComputerByOriginal.getCode()))) {
+            //根据地区区和code查询数据，校验省市区地理位置下的设备code是否已经存在
+            MasterComputer masterComputerByQuery = masterComputerDao.selectByCode(masterComputerRequest.getCounty(), masterComputerRequest.getCode());
+            if (!ObjectUtils.isEmpty(masterComputerByQuery)) {
+                logger.info("add fail , because select by code [" + masterComputerRequest.getCode() + "] , county [" + masterComputerRequest.getCounty() + "] data is exists");
+                throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_DATA_IS_EXISTS);
+            }
+        }
+
         //封装获取DB操作对象
         MasterComputer masterComputer = getMasterComputer(masterComputerRequest);
         masterComputerDao.updateByPrimaryKeySelective(masterComputer);
