@@ -21,4 +21,5 @@
         from province
         where provinceId = ${provinceId}
     </select>
+
 </mapper>

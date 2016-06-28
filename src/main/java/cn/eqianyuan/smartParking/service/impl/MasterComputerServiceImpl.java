@@ -134,6 +134,39 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
      * @throws EqianyuanException
      */
     public void add(MasterComputerRequest masterComputerRequest) throws EqianyuanException {
+        //数据写库校验
+        editValidation(masterComputerRequest);
+        //封装DB插入对象
+        MasterComputer masterComputer = getMasterComputer(masterComputerRequest);
+        masterComputerDao.insertSelective(masterComputer);
+    }
+
+    /**
+     * 根据请求入参对象获得DB操作对象
+     *
+     * @param masterComputerRequest
+     * @return
+     */
+    private MasterComputer getMasterComputer(MasterComputerRequest masterComputerRequest) {
+        MasterComputer masterComputer = new MasterComputer();
+        masterComputer.setId(masterComputerRequest.getId());
+        masterComputer.setName(masterComputerRequest.getName());
+        masterComputer.setCode(Integer.parseInt(masterComputerRequest.getCode()));
+        masterComputer.setProvince(masterComputerRequest.getProvince());
+        masterComputer.setCity(masterComputerRequest.getCity());
+        masterComputer.setCounty(masterComputerRequest.getCounty());
+        masterComputer.setAddress(masterComputerRequest.getAddress());
+        masterComputer.setDescription(masterComputerRequest.getDescription());
+        return masterComputer;
+    }
+
+    /**
+     * DB数据编辑校验
+     *
+     * @param masterComputerRequest
+     * @throws EqianyuanException
+     */
+    private void editValidation(MasterComputerRequest masterComputerRequest) throws EqianyuanException {
         //判断设备名称是否为空
         if (StringUtils.isEmpty(masterComputerRequest.getName())) {
             logger.info("add fail , because name is empty");
@@ -181,7 +214,7 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
             throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_GET_BYTE_FAIL);
         }
 
-        //判断设备通信代码内容长度是否超出DB许可长度
+        //判断设备通信代码内容长度是否超出DB许
         if (masterComputerRequest.getCode().length() > MASTER_COMPUTER_CODE_CONTENT_MAX_LENGTH) {
             logger.warn("add fial , because code content too long");
             throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_CODE_CONTENT_TOO_LONG);
@@ -226,17 +259,6 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
             logger.info("add fail , because address content getBytes(" + SystemConf.PLATFORM_CHARSET.toString() + ") fail");
             throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_GET_BYTE_FAIL);
         }
-
-        //封装DB插入对象
-        MasterComputer masterComputer = new MasterComputer();
-        masterComputer.setName(masterComputerRequest.getName());
-        masterComputer.setCode(Integer.parseInt(masterComputerRequest.getCode()));
-        masterComputer.setProvince(masterComputerRequest.getProvince());
-        masterComputer.setCity(masterComputerRequest.getCity());
-        masterComputer.setCounty(masterComputerRequest.getCounty());
-        masterComputer.setAddress(masterComputerRequest.getAddress());
-        masterComputer.setDescription(masterComputerRequest.getDescription());
-        masterComputerDao.insertSelective(masterComputer);
     }
 
     /**
@@ -298,33 +320,16 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
      * @throws EqianyuanException
      */
     public void update(MasterComputerRequest masterComputerRequest) throws EqianyuanException {
+        //判断数据主键序列编号是否为空
         if (StringUtils.isEmpty(masterComputerRequest.getId())) {
             logger.info("update fail , because update data id is empty");
             throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_ID_IS_EMPTY);
         }
 
-        if (StringUtils.isEmpty(masterComputerRequest.getName())) {
-            logger.info("update fail , because update data name is empty");
-            throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_NAME_IS_EMPTY);
-        }
-
-        if (ObjectUtils.isEmpty(masterComputerRequest.getCode())) {
-            logger.info("update fail , because update data code is empty");
-            throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_CODE_IS_EMPTY);
-        }
-
-        try {
-            if (masterComputerRequest.getName().getBytes(SystemConf.PLATFORM_CHARSET.toString()).length > MASTER_COMPUTER_NAME_CONTENT_MAX_LENGTH) {
-                logger.info("update fail , because update data name content too long");
-                throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_NAME_CONTENT_TOO_LONG);
-            }
-        } catch (UnsupportedEncodingException e) {
-            logger.info("update fail , because update data name content getBytes(" + SystemConf.PLATFORM_CHARSET.toString() + ") fail");
-            throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_GET_BYTE_FAIL);
-        }
-
-        MasterComputer masterComputer = new MasterComputer();
-        BeanUtils.copyProperties(masterComputerRequest, masterComputer);
+        //DB写库数据校验
+        editValidation(masterComputerRequest);
+        //封装获取DB操作对象
+        MasterComputer masterComputer = getMasterComputer(masterComputerRequest);
         masterComputerDao.updateByPrimaryKeySelective(masterComputer);
     }
 }

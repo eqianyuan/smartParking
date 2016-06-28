@@ -22,4 +22,5 @@ public interface ICityDao {
      * @return
      */
     City selectById(@Param("provinceId") String provinceId, @Param("cityId") String cityId);
+
 }

@@ -22,5 +22,4 @@ public interface ICountyDao {
      * @return
      */
     County selectById(@Param("cityId") String cityId, @Param("countyId") String countyId);
-
 }

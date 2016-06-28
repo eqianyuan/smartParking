@@ -24,4 +24,5 @@
         where provinceId = ${provinceId}
         and cityId = ${cityId}
     </select>
+
 </mapper>
