@@ -377,6 +377,13 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
         //根据设备主键序列号查询设备数据
         MasterComputer masterComputerByOriginal = masterComputerDao.selectByPrimaryKey(masterComputerRequest.getId());
 
+        //判断根据设备主键序列号查询的设备数据是否存在
+        if (ObjectUtils.isEmpty(masterComputerByOriginal) ||
+                StringUtils.isEmpty(masterComputerByOriginal.getId())) {
+            logger.info("get object empty , because id [" + masterComputerRequest.getId() + "] query data is empty");
+            throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_INFO_NO_EXISTS);
+        }
+
         //检查待修改数据中的设备code是否和原数据设备code相同，不相同的情况下需要校验地区下CODE是否重复
         if (!StringUtils.equals(masterComputerRequest.getCode(), String.valueOf(masterComputerByOriginal.getCode()))) {
             //根据地区区和code查询数据，校验省市区地理位置下的设备code是否已经存在
