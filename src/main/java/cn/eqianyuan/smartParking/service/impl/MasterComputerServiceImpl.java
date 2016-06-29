@@ -100,30 +100,15 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
                 continue;
             }
 
+            //获取上位机状态明文
+            String statusCN = getStatusCN(masterComputerDataMap, masterComputer.getId(), masterComputer.getStatus().toString());
+
             MasterComputerVo masterComputerVo = new MasterComputerVo();
             BeanUtils.copyProperties(masterComputer, masterComputerVo);
-
-            //获取探测器状态明文
-            String statusCN = getStatusCN(masterComputerDataMap, masterComputer.getId(), masterComputer.getStatus().toString());
+            //设置上位机VO对象状态明文
             masterComputerVo.setStatusCN(statusCN);
-
-            //根据省编号获取省地址
-            Province province = provinceDao.selectById(masterComputer.getProvince());
-            if (!ObjectUtils.isEmpty(province)) {
-                masterComputerVo.setProvinceName(province.getProvinceName());
-            }
-
-            //根据市编号获取市地址
-            City city = cityDao.selectById(masterComputer.getProvince(), masterComputer.getCity());
-            if (!ObjectUtils.isEmpty(city)) {
-                masterComputerVo.setCityName(city.getCityName());
-            }
-
-            //根据区编号获取区地址
-            County county = countyDao.selectById(masterComputer.getCity(), masterComputer.getCounty());
-            if (!ObjectUtils.isEmpty(county)) {
-                masterComputerVo.setCountyName(county.getCountyName());
-            }
+            //设置上位机VO对象地区信息
+            setAreaInfo(masterComputer, masterComputerVo);
 
             masterComputerVos.add(masterComputerVo);
         }
@@ -132,18 +117,40 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
     }
 
     /**
-     * 上位机设备信息删除
+     * 上位机设备信息对象
      *
-     * @param id 设备序列编号
+     * @param id 上位机设备序列编号
      * @return
      */
-    public void delete(String... id) throws EqianyuanException {
-        if (ObjectUtils.isEmpty(id)) {
-            logger.info("delete fail , because id is null, a full table delete is prohibited");
+    public MasterComputerVo object(String id) throws EqianyuanException {
+        if (StringUtils.isEmpty(id)) {
+            logger.info("get object empty , because query id is empty");
             throw new EqianyuanException(ExceptionMsgConstant.DETECTOR_ID_IS_EMPTY);
         }
 
-        masterComputerDao.deleteById(id);
+        MasterComputer masterComputer = masterComputerDao.selectByPrimaryKey(id);
+        if (ObjectUtils.isEmpty(masterComputer) ||
+                StringUtils.isEmpty(masterComputer.getId())) {
+            logger.info("get object empty , because id [" + id + "] query data is empty");
+            throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_INFO_NO_EXISTS);
+        }
+
+        MasterComputerVo masterComputerVo = new MasterComputerVo();
+        BeanUtils.copyProperties(masterComputer, masterComputerVo);
+
+        //从数据常量MAP对象中获取上位机数据MAP
+        Map<String, Object> masterComputerDataMap = (Map<String, Object>) YamlForMapHandleUtil.getMapByKey(DataMap.getMap()
+                , DataMap.Key.MASTER_COMPUTER.toString());
+
+        //获取上位机状态明文
+        String statusCN = getStatusCN(masterComputerDataMap, masterComputer.getId(), masterComputer.getStatus().toString());
+
+        //设置上位机VO对象状态明文
+        masterComputerVo.setStatusCN(statusCN);
+        //设置上位机VO对象地区信息
+        setAreaInfo(masterComputer, masterComputerVo);
+
+        return masterComputerVo;
     }
 
     /**
@@ -166,6 +173,88 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
         //封装DB插入对象
         MasterComputer masterComputer = getMasterComputer(masterComputerRequest);
         masterComputerDao.insertSelective(masterComputer);
+    }
+
+    /**
+     * 上位机设备信息修改
+     *
+     * @param masterComputerRequest 上位机修改请求数据封装对象
+     * @throws EqianyuanException
+     */
+    public void update(MasterComputerRequest masterComputerRequest) throws EqianyuanException {
+        //判断数据主键序列编号是否为空
+        if (StringUtils.isEmpty(masterComputerRequest.getId())) {
+            logger.info("update fail , because update data id is empty");
+            throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_ID_IS_EMPTY);
+        }
+
+        //DB写库数据校验
+        editValidation(masterComputerRequest);
+
+        //根据设备主键序列号查询设备数据
+        MasterComputer masterComputerByOriginal = masterComputerDao.selectByPrimaryKey(masterComputerRequest.getId());
+
+        //判断根据设备主键序列号查询的设备数据是否存在
+        if (ObjectUtils.isEmpty(masterComputerByOriginal) ||
+                StringUtils.isEmpty(masterComputerByOriginal.getId())) {
+            logger.info("get object empty , because id [" + masterComputerRequest.getId() + "] query data is empty");
+            throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_INFO_NO_EXISTS);
+        }
+
+        //检查待修改数据中的设备code是否和原数据设备code相同，不相同的情况下需要校验地区下CODE是否重复
+        if (!StringUtils.equals(masterComputerRequest.getCode(), String.valueOf(masterComputerByOriginal.getCode()))) {
+            //根据地区区和code查询数据，校验省市区地理位置下的设备code是否已经存在
+            MasterComputer masterComputerByQuery = masterComputerDao.selectByCode(masterComputerRequest.getCounty(), masterComputerRequest.getCode());
+            if (!ObjectUtils.isEmpty(masterComputerByQuery)) {
+                logger.info("add fail , because select by code [" + masterComputerRequest.getCode() + "] , county [" + masterComputerRequest.getCounty() + "] data is exists");
+                throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_DATA_IS_EXISTS);
+            }
+        }
+
+        //封装获取DB操作对象
+        MasterComputer masterComputer = getMasterComputer(masterComputerRequest);
+        masterComputerDao.updateByPrimaryKeySelective(masterComputer);
+    }
+
+    /**
+     * 上位机设备信息删除
+     *
+     * @param id 设备序列编号
+     * @return
+     */
+    public void delete(String... id) throws EqianyuanException {
+        if (ObjectUtils.isEmpty(id)) {
+            logger.info("delete fail , because id is null, a full table delete is prohibited");
+            throw new EqianyuanException(ExceptionMsgConstant.DETECTOR_ID_IS_EMPTY);
+        }
+
+        masterComputerDao.deleteById(id);
+    }
+
+    /**
+     * 设置上位机VO对象地区信息
+     *
+     * @param masterComputer   上位机DB数据对象
+     * @param masterComputerVo 上位机VO对象
+     */
+    private void setAreaInfo(MasterComputer masterComputer, MasterComputerVo masterComputerVo) {
+        //根据省编号获取省地址
+        Province province = provinceDao.selectById(masterComputer.getProvince());
+        if (!ObjectUtils.isEmpty(province)) {
+            masterComputerVo.setProvinceName(province.getProvinceName());
+        }
+
+        //根据市编号获取市地址
+        City city = cityDao.selectById(masterComputer.getProvince(), masterComputer.getCity());
+        if (!ObjectUtils.isEmpty(city)) {
+            masterComputerVo.setCityName(city.getCityName());
+        }
+
+        //根据区编号获取区地址
+        County county = countyDao.selectById(masterComputer.getCity(), masterComputer.getCounty());
+        if (!ObjectUtils.isEmpty(county)) {
+            masterComputerVo.setCountyName(county.getCountyName());
+        }
     }
 
     /**
@@ -289,66 +378,15 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
     }
 
     /**
-     * 上位机设备信息对象
+     * 获取上位机状态明文
      *
-     * @param id 上位机设备序列编号
-     * @return
-     */
-    public MasterComputerVo object(String id) throws EqianyuanException {
-        if (StringUtils.isEmpty(id)) {
-            logger.info("get object empty , because query id is empty");
-            throw new EqianyuanException(ExceptionMsgConstant.DETECTOR_ID_IS_EMPTY);
-        }
-
-        MasterComputer masterComputer = masterComputerDao.selectByPrimaryKey(id);
-        if (ObjectUtils.isEmpty(masterComputer) ||
-                StringUtils.isEmpty(masterComputer.getId())) {
-            logger.info("get object empty , because id [" + id + "] query data is empty");
-            throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_INFO_NO_EXISTS);
-        }
-
-        MasterComputerVo masterComputerVo = new MasterComputerVo();
-        BeanUtils.copyProperties(masterComputer, masterComputerVo);
-
-        //从数据常量MAP对象中获取探测器数据MAP
-        Map<String, Object> masterComputerDataMap = (Map<String, Object>) YamlForMapHandleUtil.getMapByKey(DataMap.getMap()
-                , DataMap.Key.MASTER_COMPUTER.toString());
-
-        //获取探测器状态明文
-        String statusCN = getStatusCN(masterComputerDataMap, masterComputer.getId(), masterComputer.getStatus().toString());
-        masterComputerVo.setStatusCN(statusCN);
-
-        //根据省编号获取省地址
-        Province province = provinceDao.selectById(masterComputer.getProvince());
-        if (!ObjectUtils.isEmpty(province)) {
-            masterComputerVo.setProvinceName(province.getProvinceName());
-        }
-
-        //根据市编号获取市地址
-        City city = cityDao.selectById(masterComputer.getProvince(), masterComputer.getCity());
-        if (!ObjectUtils.isEmpty(city)) {
-            masterComputerVo.setCityName(city.getCityName());
-        }
-
-        //根据区编号获取区地址
-        County county = countyDao.selectById(masterComputer.getCity(), masterComputer.getCounty());
-        if (!ObjectUtils.isEmpty(county)) {
-            masterComputerVo.setCountyName(county.getCountyName());
-        }
-
-        return masterComputerVo;
-    }
-
-    /**
-     * 获取探测器状态明文
-     *
-     * @param masterComputerDataMap 探测器数据静态资源MAP对象
-     * @param id                    探测器序列编号
-     * @param status                探测器状态
+     * @param masterComputerDataMap 上位机数据静态资源MAP对象
+     * @param id                    上位机序列编号
+     * @param status                上位机状态
      * @return
      */
     private String getStatusCN(Map<String, Object> masterComputerDataMap, String id, String status) {
-        //从探测器数据MAP中获取出探测器状态数据字符串
+        //从上位机数据MAP中获取出上位机状态数据字符串
         String statusCN = YamlForMapHandleUtil.getValueBykey(masterComputerDataMap, DataMap.Key.STATUS.toString(), status);
 
         if (StringUtils.isEmpty(statusCN)) {
@@ -356,46 +394,5 @@ public class MasterComputerServiceImpl implements IMasterComputerService {
             statusCN = StringUtils.EMPTY;
         }
         return statusCN;
-    }
-
-    /**
-     * 上位机设备信息修改
-     *
-     * @param masterComputerRequest 上位机修改请求数据封装对象
-     * @throws EqianyuanException
-     */
-    public void update(MasterComputerRequest masterComputerRequest) throws EqianyuanException {
-        //判断数据主键序列编号是否为空
-        if (StringUtils.isEmpty(masterComputerRequest.getId())) {
-            logger.info("update fail , because update data id is empty");
-            throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_ID_IS_EMPTY);
-        }
-
-        //DB写库数据校验
-        editValidation(masterComputerRequest);
-
-        //根据设备主键序列号查询设备数据
-        MasterComputer masterComputerByOriginal = masterComputerDao.selectByPrimaryKey(masterComputerRequest.getId());
-
-        //判断根据设备主键序列号查询的设备数据是否存在
-        if (ObjectUtils.isEmpty(masterComputerByOriginal) ||
-                StringUtils.isEmpty(masterComputerByOriginal.getId())) {
-            logger.info("get object empty , because id [" + masterComputerRequest.getId() + "] query data is empty");
-            throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_INFO_NO_EXISTS);
-        }
-
-        //检查待修改数据中的设备code是否和原数据设备code相同，不相同的情况下需要校验地区下CODE是否重复
-        if (!StringUtils.equals(masterComputerRequest.getCode(), String.valueOf(masterComputerByOriginal.getCode()))) {
-            //根据地区区和code查询数据，校验省市区地理位置下的设备code是否已经存在
-            MasterComputer masterComputerByQuery = masterComputerDao.selectByCode(masterComputerRequest.getCounty(), masterComputerRequest.getCode());
-            if (!ObjectUtils.isEmpty(masterComputerByQuery)) {
-                logger.info("add fail , because select by code [" + masterComputerRequest.getCode() + "] , county [" + masterComputerRequest.getCounty() + "] data is exists");
-                throw new EqianyuanException(ExceptionMsgConstant.MASTER_COMPUTER_DATA_IS_EXISTS);
-            }
-        }
-
-        //封装获取DB操作对象
-        MasterComputer masterComputer = getMasterComputer(masterComputerRequest);
-        masterComputerDao.updateByPrimaryKeySelective(masterComputer);
     }
 }
